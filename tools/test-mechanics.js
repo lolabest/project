@@ -15,6 +15,7 @@ const files = [
   'js/constants.js',
   'js/themes.js',
   'js/snow-field.js',
+  'js/halloween-field.js',
   'js/utils.js',
   'js/bubble.js',
   'js/board.js',

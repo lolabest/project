@@ -16,12 +16,20 @@
       this.currentId = 'original';
       this.current = BS.THEMES.original;
       this.snow = null;
+      this.halloween = null;
 
       if (BS.SnowField) {
         try {
           this.snow = new BS.SnowField();
         } catch {
           this.snow = null;
+        }
+      }
+      if (BS.HalloweenField) {
+        try {
+          this.halloween = new BS.HalloweenField();
+        } catch {
+          this.halloween = null;
         }
       }
     }
@@ -33,6 +41,17 @@
 
     list() {
       return BS.THEME_ORDER.map((id) => BS.THEMES[id]);
+    }
+
+    syncEffects(themeId) {
+      if (this.snow) {
+        if (themeId === 'newyear') this.snow.start();
+        else this.snow.stop();
+      }
+      if (this.halloween) {
+        if (themeId === 'halloween') this.halloween.start();
+        else this.halloween.stop();
+      }
     }
 
     /**
@@ -64,10 +83,7 @@
         this.storage.setTheme(theme.id);
       }
 
-      if (this.snow) {
-        if (theme.id === 'newyear') this.snow.start();
-        else this.snow.stop();
-      }
+      this.syncEffects(theme.id);
 
       for (const listener of this.listeners) {
         listener(theme);

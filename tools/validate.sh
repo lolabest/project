@@ -47,6 +47,7 @@ required_files=(
   js/constants.js
   js/themes.js
   js/snow-field.js
+  js/halloween-field.js
   js/theme-manager.js
   js/utils.js
   js/bubble.js

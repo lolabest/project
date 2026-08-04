@@ -17,7 +17,7 @@
   ]);
 
   BS.CONSTANTS = Object.freeze({
-    VERSION: '1.2.3',
+    VERSION: '1.2.4',
     STORAGE_KEY: 'bubble-shooter-v1',
     /** Wider / taller board for a mobile-arcade playfield feel. */
     COLS: 10,
