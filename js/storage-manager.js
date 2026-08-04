@@ -10,7 +10,7 @@
   class StorageManager {
     constructor(key = CONSTANTS.STORAGE_KEY) {
       this.key = key;
-      this.memory = { highScore: 0, muted: false, gamesPlayed: 0 };
+      this.memory = { highScore: 0, muted: false, gamesPlayed: 0, theme: 'original' };
       this.available = StorageManager.probe();
       this.load();
     }
@@ -41,6 +41,9 @@
         if (typeof data.gamesPlayed === 'number' && data.gamesPlayed >= 0) {
           this.memory.gamesPlayed = Math.floor(data.gamesPlayed);
         }
+        if (typeof data.theme === 'string' && data.theme.length < 32) {
+          this.memory.theme = data.theme;
+        }
       } catch {
         // Corrupt payload — keep defaults.
       }
@@ -70,6 +73,15 @@
 
     setMuted(muted) {
       this.memory.muted = Boolean(muted);
+      this.save();
+    }
+
+    getTheme() {
+      return this.memory.theme || 'original';
+    }
+
+    setTheme(themeId) {
+      this.memory.theme = String(themeId || 'original');
       this.save();
     }
 

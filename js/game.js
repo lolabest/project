@@ -26,10 +26,12 @@
       this.stage = options.stage;
 
       this.storage = new BS.StorageManager();
+      this.themes = new BS.ThemeManager(this.storage);
       this.scoreManager = new BS.ScoreManager(this.storage);
       this.sound = new BS.SoundManager(this.storage);
       this.ui = new BS.UIManager(document);
       this.renderer = new BS.Renderer(this.canvas);
+      this.renderer.themes = this.themes;
       this.animations = new BS.AnimationManager();
       this.particles = new BS.ParticleSystem();
 
@@ -51,6 +53,12 @@
       this.tick = this.frame.bind(this);
       this.resizeObserver = null;
 
+      this.themes.restore();
+      this.ui.renderSkins(this.themes.list(), this.themes.currentId, (id) => {
+        this.applyTheme(id);
+      });
+      this.ui.setActiveSkin(this.themes.currentId);
+
       this.scoreManager.onChange((snap) => this.ui.updateScore(snap));
       this.ui.bindActions({
         onRestart: () => this.restart(),
@@ -58,6 +66,8 @@
         onMute: () => this.toggleMute(),
         onHelp: () => this.ui.openHelp(),
         onCloseHelp: () => this.ui.closeHelp(),
+        onSkins: () => this.ui.openSkins(),
+        onCloseSkins: () => this.ui.closeSkins(),
       });
       this.ui.setMuted(this.sound.muted);
 
@@ -67,6 +77,7 @@
         onNudge: (dir) => this.handleNudge(dir),
         onRestart: () => this.restart(),
         onMute: () => this.toggleMute(),
+        onTheme: () => this.cycleTheme(),
         onUnlock: () => this.sound.unlock(),
       });
 
@@ -121,6 +132,26 @@
     toggleMute() {
       const muted = this.sound.toggleMute();
       this.ui.setMuted(muted);
+    }
+
+    applyTheme(id) {
+      const theme = this.themes.setTheme(id);
+      this.ui.setActiveSkin(theme.id);
+      this.ui.setStatus(`${theme.name} skin`);
+      // Sparkle feedback on skin change.
+      if (this.layout) {
+        this.particles.sparkle(
+          this.layout.width * 0.5,
+          this.layout.height * 0.35,
+          theme.colors[0].fill
+        );
+      }
+    }
+
+    cycleTheme() {
+      const theme = this.themes.cycle();
+      this.ui.setActiveSkin(theme.id);
+      this.ui.setStatus(`${theme.name} skin`);
     }
 
     resetWorld() {

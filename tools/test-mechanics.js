@@ -13,12 +13,14 @@ const root = path.resolve(__dirname, '..');
 
 const files = [
   'js/constants.js',
+  'js/themes.js',
   'js/utils.js',
   'js/bubble.js',
   'js/board.js',
   'js/collision-engine.js',
   'js/shooter.js',
   'js/storage-manager.js',
+  'js/theme-manager.js',
   'js/score-manager.js',
   'js/animation-manager.js',
   'js/particle-system.js',
@@ -63,11 +65,19 @@ function loadNamespace() {
   sandbox.window = sandbox;
   sandbox.globalThis = sandbox;
   sandbox.document = {
+    documentElement: {
+      style: { setProperty() {} },
+      setAttribute() {},
+    },
+    querySelector() {
+      return { textContent: '', setAttribute() {} };
+    },
     getElementById(id) {
       return {
         id,
         textContent: '',
         hidden: false,
+        innerHTML: '',
         classList: { toggle() {}, add() {}, remove() {} },
         setAttribute() {},
         getAttribute() { return null; },
@@ -76,6 +86,20 @@ function loadNamespace() {
         showModal() {},
         close() {},
         open: false,
+        querySelectorAll() { return []; },
+        appendChild() {},
+      };
+    },
+    createElement() {
+      return {
+        type: '',
+        className: '',
+        dataset: {},
+        innerHTML: '',
+        setAttribute() {},
+        addEventListener() {},
+        appendChild() {},
+        classList: { toggle() {}, add() {}, remove() {} },
       };
     },
     readyState: 'complete',
@@ -176,6 +200,7 @@ function testHttpIndex() {
 async function main() {
   const { BS, listeners } = loadNamespace();
   assert(BS && BS.Game && BS.Board, 'BS namespace incomplete');
+  assert(BS.THEMES && BS.THEME_ORDER.length === 4, 'expected 4 themes');
   testBoardMatching(BS);
   testKeyboard(BS, listeners);
   await testHttpIndex();

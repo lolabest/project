@@ -45,6 +45,8 @@ required_files=(
   screenshots/gameplay.png
   tools/test-mechanics.js
   js/constants.js
+  js/themes.js
+  js/theme-manager.js
   js/utils.js
   js/bubble.js
   js/board.js

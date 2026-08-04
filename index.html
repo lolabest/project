@@ -46,6 +46,9 @@
 
         <div class="toolbar">
           <p class="status" id="status-text" aria-live="polite">Ready</p>
+          <button type="button" class="btn ghost" id="btn-skins" aria-label="Choose a skin theme" title="Skins (T)">
+            Skins
+          </button>
           <button type="button" class="btn ghost" id="btn-help" aria-label="Open help and controls">
             Help
           </button>
@@ -79,7 +82,7 @@
           <aside class="hints" aria-label="Quick controls">
             <p><kbd>←</kbd><kbd>→</kbd> Aim</p>
             <p><kbd>Space</kbd> Shoot</p>
-            <p><kbd>R</kbd> Restart · <kbd>M</kbd> Mute</p>
+            <p><kbd>T</kbd> Skins · <kbd>M</kbd> Mute</p>
           </aside>
 
           <div
@@ -111,10 +114,19 @@
         <p>
           Open source under MIT ·
           <a href="https://github.com/lolabest/project">GitHub</a>
-          · v1.1.0
+          · v1.2.0
         </p>
       </footer>
     </div>
+
+    <dialog id="skins-dialog" class="help-dialog skins-dialog" aria-labelledby="skins-title">
+      <div class="help-card skins-card">
+        <h2 id="skins-title">Choose a Skin</h2>
+        <p class="skins-intro">Switch the whole look — sky, frame, HUD, and bubble colors. Your pick is saved.</p>
+        <div id="skins-grid" class="skins-grid" role="listbox" aria-label="Available skins"></div>
+        <button type="button" class="btn primary" id="btn-close-skins">Done</button>
+      </div>
+    </dialog>
 
     <dialog id="help-dialog" class="help-dialog" aria-labelledby="help-title">
       <form method="dialog" class="help-card">
@@ -125,6 +137,7 @@
           <li>Match <strong>3 or more</strong> of the same color to pop them.</li>
           <li>Disconnected clusters fall for bonus points.</li>
           <li>Clear the board to win. Crossing the red line loses.</li>
+          <li>Open <strong>Skins</strong> (or press <kbd>T</kbd>) to switch Original, Halloween, New Year, or St. Patrick’s Day.</li>
         </ul>
         <p class="help-note">Works offline — just open <code>index.html</code>.</p>
         <button type="submit" class="btn primary" id="btn-close-help">Got it</button>
@@ -133,12 +146,14 @@
 
     <!-- Order matters: namespace modules, then entry -->
     <script src="js/constants.js"></script>
+    <script src="js/themes.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/bubble.js"></script>
     <script src="js/board.js"></script>
     <script src="js/collision-engine.js"></script>
     <script src="js/shooter.js"></script>
     <script src="js/storage-manager.js"></script>
+    <script src="js/theme-manager.js"></script>
     <script src="js/score-manager.js"></script>
     <script src="js/animation-manager.js"></script>
     <script src="js/particle-system.js"></script>

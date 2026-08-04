@@ -63,12 +63,14 @@ jobs:
           const vm = require('vm');
           const files = [
             'js/constants.js',
+            'js/themes.js',
             'js/utils.js',
             'js/bubble.js',
             'js/board.js',
             'js/collision-engine.js',
             'js/shooter.js',
             'js/storage-manager.js',
+            'js/theme-manager.js',
             'js/score-manager.js',
             'js/animation-manager.js',
             'js/particle-system.js',
@@ -99,8 +101,12 @@ jobs:
             vm.runInContext(fs.readFileSync(file, 'utf8'), ctx, { filename: file });
           }
           const BS = sandbox.BS;
-          if (!BS || !BS.Board || !BS.CollisionEngine || !BS.Game) {
+          if (!BS || !BS.Board || !BS.CollisionEngine || !BS.Game || !BS.THEMES || !BS.ThemeManager) {
             console.error('BS namespace incomplete', Object.keys(BS || {}));
+            process.exit(1);
+          }
+          if (Object.keys(BS.THEMES).length < 4) {
+            console.error('Expected 4 themes');
             process.exit(1);
           }
           const board = new BS.Board({

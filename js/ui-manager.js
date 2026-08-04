@@ -1,5 +1,5 @@
 /**
- * DOM HUD and modal overlays.
+ * DOM HUD, overlays, and skin picker.
  */
 (function (global) {
   'use strict';
@@ -25,8 +25,12 @@
         playBtn: document.getElementById('btn-play'),
         muteBtn: document.getElementById('btn-mute'),
         helpBtn: document.getElementById('btn-help'),
+        skinsBtn: document.getElementById('btn-skins'),
         helpDialog: document.getElementById('help-dialog'),
         closeHelpBtn: document.getElementById('btn-close-help'),
+        skinsDialog: document.getElementById('skins-dialog'),
+        closeSkinsBtn: document.getElementById('btn-close-skins'),
+        skinsGrid: document.getElementById('skins-grid'),
       };
     }
 
@@ -53,7 +57,6 @@
       if (overlayScore) overlayScore.textContent = scoreText;
       if (playBtn) playBtn.hidden = !showPlay;
       if (restartBtn) restartBtn.hidden = showPlay;
-      // Focus primary action for accessibility.
       global.requestAnimationFrame(() => {
         const focusTarget = showPlay ? playBtn : restartBtn;
         focusTarget?.focus();
@@ -76,17 +79,31 @@
     }
 
     openHelp() {
-      const dialog = this.els.helpDialog;
+      this.openDialog(this.els.helpDialog);
+    }
+
+    closeHelp() {
+      this.closeDialog(this.els.helpDialog);
+    }
+
+    openSkins() {
+      this.openDialog(this.els.skinsDialog);
+    }
+
+    closeSkins() {
+      this.closeDialog(this.els.skinsDialog);
+    }
+
+    openDialog(dialog) {
       if (!dialog) return;
       if (typeof dialog.showModal === 'function') {
-        dialog.showModal();
+        if (!dialog.open) dialog.showModal();
       } else {
         dialog.hidden = false;
       }
     }
 
-    closeHelp() {
-      const dialog = this.els.helpDialog;
+    closeDialog(dialog) {
       if (!dialog) return;
       if (typeof dialog.close === 'function' && dialog.open) {
         dialog.close();
@@ -96,17 +113,67 @@
     }
 
     /**
-     * Wire button callbacks.
+     * Build skin cards once and keep selection in sync.
+     * @param {object[]} themes
+     * @param {string} activeId
+     * @param {(id: string) => void} onSelect
      */
-    bindActions({ onRestart, onPlay, onMute, onHelp, onCloseHelp }) {
+    renderSkins(themes, activeId, onSelect) {
+      const grid = this.els.skinsGrid;
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      for (const theme of themes) {
+        const btn = this.document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'skin-card';
+        btn.dataset.themeId = theme.id;
+        btn.setAttribute('aria-pressed', theme.id === activeId ? 'true' : 'false');
+        btn.setAttribute('aria-label', `${theme.name} skin. ${theme.blurb}`);
+
+        const swatches = theme.colors
+          .map((c) => `<span class="skin-swatch" style="background:${c.fill}"></span>`)
+          .join('');
+
+        btn.innerHTML = `
+          <span class="skin-preview" data-skin="${theme.id}" aria-hidden="true"></span>
+          <span class="skin-meta">
+            <span class="skin-name">${theme.name}</span>
+            <span class="skin-blurb">${theme.blurb}</span>
+            <span class="skin-swatches">${swatches}</span>
+          </span>
+        `;
+
+        btn.addEventListener('click', () => onSelect(theme.id));
+        grid.appendChild(btn);
+      }
+    }
+
+    setActiveSkin(activeId) {
+      const grid = this.els.skinsGrid;
+      if (!grid) return;
+      for (const btn of grid.querySelectorAll('.skin-card')) {
+        const on = btn.dataset.themeId === activeId;
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        btn.classList.toggle('is-active', on);
+      }
+    }
+
+    bindActions({ onRestart, onPlay, onMute, onHelp, onCloseHelp, onSkins, onCloseSkins }) {
       this.els.restartBtn?.addEventListener('click', onRestart);
       this.els.playBtn?.addEventListener('click', onPlay);
       this.els.muteBtn?.addEventListener('click', onMute);
       this.els.helpBtn?.addEventListener('click', onHelp);
       this.els.closeHelpBtn?.addEventListener('click', onCloseHelp);
+      this.els.skinsBtn?.addEventListener('click', onSkins);
+      this.els.closeSkinsBtn?.addEventListener('click', onCloseSkins);
       this.els.helpDialog?.addEventListener('cancel', (e) => {
         e.preventDefault();
         onCloseHelp();
+      });
+      this.els.skinsDialog?.addEventListener('cancel', (e) => {
+        e.preventDefault();
+        onCloseSkins();
       });
     }
   }

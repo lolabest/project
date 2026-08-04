@@ -106,6 +106,7 @@
         code === 'ArrowUp';
       const isRestart = key === 'r' || key === 'R' || code === 'KeyR';
       const isMute = key === 'm' || key === 'M' || code === 'KeyM';
+      const isTheme = key === 't' || key === 'T' || code === 'KeyT';
 
       if (event.repeat && isShoot) return;
 
@@ -127,6 +128,8 @@
         if (this.handlers.onRestart) this.handlers.onRestart();
       } else if (isMute) {
         if (this.handlers.onMute) this.handlers.onMute();
+      } else if (isTheme) {
+        if (this.handlers.onTheme) this.handlers.onTheme();
       }
     }
 
