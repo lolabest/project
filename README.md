@@ -49,18 +49,25 @@ No frameworks. No npm. No bundlers. Open `index.html` and play.
 2. Open `index.html` in a modern browser
 3. Click **Play**
 
-### Local static server (optional)
+### Local static server
+
+```bash
+npm run dev
+```
+
+Then visit `http://localhost:8080`.
+
+Equivalent without npm:
 
 ```bash
 python3 -m http.server 8080
 ```
 
-Visit `http://localhost:8080`.
-
 ### Validate the repo
 
 ```bash
-bash tools/validate.sh
+npm run validate
+npm test
 ```
 
 ## Controls
