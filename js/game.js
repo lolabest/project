@@ -137,8 +137,9 @@
     applyTheme(id) {
       const theme = this.themes.setTheme(id);
       this.ui.setActiveSkin(theme.id);
-      this.ui.setStatus(`${theme.name} skin`);
-      // Sparkle feedback on skin change.
+      this.ui.setStatus(
+        theme.id === 'newyear' ? 'Santa is flying!' : `${theme.name} skin`
+      );
       if (this.layout) {
         this.particles.sparkle(
           this.layout.width * 0.5,
@@ -151,7 +152,9 @@
     cycleTheme() {
       const theme = this.themes.cycle();
       this.ui.setActiveSkin(theme.id);
-      this.ui.setStatus(`${theme.name} skin`);
+      this.ui.setStatus(
+        theme.id === 'newyear' ? 'Santa is flying!' : `${theme.name} skin`
+      );
     }
 
     resetWorld() {

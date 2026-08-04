@@ -29,11 +29,11 @@
 
       // Santa sleigh state (same canvas as snow).
       this.santa = {
-        x: -200,
+        x: 40,
         y: 0,
-        speed: 90,
+        speed: 170,
         bob: 0,
-        scale: 1,
+        scale: 1.35,
         lap: 0,
       };
 
@@ -52,8 +52,8 @@
       this.canvas.style.height = `${this.height}px`;
       this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
 
-      this.santa.y = this.height * 0.18;
-      this.santa.scale = Math.max(0.7, Math.min(1.25, this.width / 900));
+      this.santa.y = this.height * 0.22;
+      this.santa.scale = Math.max(1.15, Math.min(1.85, this.width / 700));
 
       if (this.active) {
         this.ensureFlakeCount();
@@ -90,13 +90,23 @@
     }
 
     start() {
-      if (this.active) return;
+      // Allow restarting the flyby when re-selecting New Year.
+      if (this.active) {
+        this.santa.x = this.width * 0.08;
+        this.santa.y = this.height * 0.22;
+        this.santa.bob = 0;
+        this.santa.lap = 0;
+        return;
+      }
       this.active = true;
       this.canvas.classList.add('is-active');
       this.ensureFlakeCount();
-      this.santa.x = -220 * this.santa.scale;
-      this.santa.y = this.height * 0.16;
+      this.santa.scale = Math.max(1.15, Math.min(1.85, this.width / 700));
+      this.santa.x = this.width * 0.08;
+      this.santa.y = this.height * 0.22;
       this.santa.bob = 0;
+      this.santa.speed = 170;
+      this.santa.lap = 0;
       this.lastTime = performance.now();
       this.rafId = requestAnimationFrame((t) => this.frame(t));
     }
@@ -156,16 +166,15 @@
 
     updateSanta(dt) {
       const s = this.santa;
-      s.bob += dt * 2.2;
-      s.x += s.speed * s.scale * dt;
-      s.y = this.height * (0.14 + 0.04 * Math.sin(s.bob)) + Math.sin(s.bob * 0.7) * 10;
+      s.bob += dt * 2.6;
+      s.x += s.speed * dt;
+      s.y = this.height * (0.2 + 0.05 * Math.sin(s.bob * 0.85)) + Math.sin(s.bob) * 14;
 
-      const sleighWidth = 220 * s.scale;
-      if (s.x - sleighWidth > this.width + 40) {
+      const sleighWidth = 260 * s.scale;
+      if (s.x - sleighWidth > this.width + 20) {
         s.lap += 1;
-        s.x = -sleighWidth - 40;
-        // Alternate height band each lap so he stays noticeable.
-        s.y = this.height * (s.lap % 2 === 0 ? 0.14 : 0.28);
+        s.x = -sleighWidth * 0.35;
+        s.y = this.height * (s.lap % 2 === 0 ? 0.2 : 0.34);
         s.bob = 0;
       }
     }
@@ -182,144 +191,158 @@
       ctx.save();
       ctx.translate(x, y);
       ctx.scale(sc, sc);
-      ctx.globalAlpha = 0.95;
+
+      // Strong silhouette halo so Santa reads over bright bubbles.
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.55)';
+      ctx.shadowBlur = 18;
+      ctx.shadowOffsetY = 4;
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+      ctx.beginPath();
+      ctx.ellipse(130, 24, 120, 36, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.globalAlpha = 1;
 
       // Soft shadow under the sleigh
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
       ctx.beginPath();
-      ctx.ellipse(110, 52, 70, 10, 0, 0, Math.PI * 2);
+      ctx.ellipse(120, 56, 78, 12, 0, 0, Math.PI * 2);
       ctx.fill();
 
       // Reindeer (3)
       for (let i = 0; i < 3; i += 1) {
-        const dx = i * 34;
-        const dy = Math.sin(s.bob * 3 + i) * 3;
-        this.drawReindeer(ctx, dx, 8 + dy);
+        const dx = i * 36;
+        const dy = Math.sin(s.bob * 3.2 + i) * 4;
+        this.drawReindeer(ctx, dx, 6 + dy);
       }
 
       // Harness lines
-      ctx.strokeStyle = '#f0c14b';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#ffe08a';
+      ctx.lineWidth = 2.5;
       ctx.lineCap = 'round';
       ctx.beginPath();
-      ctx.moveTo(90, 22);
-      ctx.quadraticCurveTo(120, 10, 148, 28);
+      ctx.moveTo(92, 22);
+      ctx.quadraticCurveTo(122, 8, 150, 28);
       ctx.stroke();
 
       // Sleigh body
-      ctx.fillStyle = '#c62828';
+      ctx.fillStyle = '#b71c1c';
+      ctx.strokeStyle = '#fff8e0';
+      ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(145, 30);
-      ctx.quadraticCurveTo(190, 8, 250, 28);
-      ctx.lineTo(258, 42);
-      ctx.quadraticCurveTo(200, 58, 148, 48);
+      ctx.quadraticCurveTo(190, 6, 255, 28);
+      ctx.lineTo(262, 44);
+      ctx.quadraticCurveTo(200, 62, 148, 50);
       ctx.closePath();
       ctx.fill();
+      ctx.stroke();
 
       ctx.fillStyle = '#e53935';
       ctx.beginPath();
       ctx.moveTo(150, 28);
-      ctx.quadraticCurveTo(190, 14, 246, 30);
-      ctx.lineTo(250, 40);
-      ctx.quadraticCurveTo(198, 52, 152, 42);
+      ctx.quadraticCurveTo(190, 12, 250, 30);
+      ctx.lineTo(254, 42);
+      ctx.quadraticCurveTo(198, 54, 152, 44);
       ctx.closePath();
       ctx.fill();
 
       // Gold runners
-      ctx.strokeStyle = '#f0c14b';
-      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#ffd54f';
+      ctx.lineWidth = 4;
       ctx.beginPath();
-      ctx.moveTo(148, 46);
-      ctx.quadraticCurveTo(200, 62, 256, 44);
+      ctx.moveTo(148, 48);
+      ctx.quadraticCurveTo(200, 66, 260, 46);
       ctx.stroke();
 
       // Gift sack
-      ctx.fillStyle = '#2e7d32';
+      ctx.fillStyle = '#1b5e20';
       ctx.beginPath();
-      ctx.ellipse(228, 18, 16, 12, -0.2, 0, Math.PI * 2);
+      ctx.ellipse(232, 16, 18, 13, -0.2, 0, Math.PI * 2);
       ctx.fill();
-      ctx.strokeStyle = '#f0c14b';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#ffd54f';
+      ctx.lineWidth = 2.5;
       ctx.beginPath();
-      ctx.moveTo(216, 14);
-      ctx.quadraticCurveTo(228, 4, 240, 14);
+      ctx.moveTo(218, 12);
+      ctx.quadraticCurveTo(232, 0, 246, 12);
       ctx.stroke();
 
       // Santa body
       ctx.fillStyle = '#c62828';
       ctx.beginPath();
-      ctx.ellipse(188, 18, 14, 16, 0, 0, Math.PI * 2);
+      ctx.ellipse(190, 16, 16, 18, 0, 0, Math.PI * 2);
       ctx.fill();
-
-      // White trim
       ctx.strokeStyle = '#fff';
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 3.5;
       ctx.beginPath();
       ctx.moveTo(176, 28);
-      ctx.quadraticCurveTo(188, 34, 200, 28);
+      ctx.quadraticCurveTo(190, 36, 204, 28);
       ctx.stroke();
 
       // Head
       ctx.fillStyle = '#ffcc80';
       ctx.beginPath();
-      ctx.arc(188, 0, 10, 0, Math.PI * 2);
+      ctx.arc(190, -2, 12, 0, Math.PI * 2);
       ctx.fill();
 
       // Beard
       ctx.fillStyle = '#fffef5';
       ctx.beginPath();
-      ctx.ellipse(188, 8, 9, 8, 0, 0, Math.PI * 2);
+      ctx.ellipse(190, 8, 11, 10, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = '#ffcc80';
       ctx.beginPath();
-      ctx.ellipse(188, 4, 5, 3, 0, 0, Math.PI * 2);
+      ctx.ellipse(190, 2, 6, 3.5, 0, 0, Math.PI * 2);
       ctx.fill();
 
       // Hat
       ctx.fillStyle = '#c62828';
       ctx.beginPath();
-      ctx.moveTo(178, -4);
-      ctx.quadraticCurveTo(188, -26, 210, -8);
-      ctx.lineTo(200, -2);
-      ctx.quadraticCurveTo(188, -14, 180, -2);
+      ctx.moveTo(178, -6);
+      ctx.quadraticCurveTo(190, -32, 216, -10);
+      ctx.lineTo(204, -2);
+      ctx.quadraticCurveTo(190, -16, 180, -2);
       ctx.closePath();
       ctx.fill();
       ctx.fillStyle = '#fff';
       ctx.beginPath();
-      ctx.arc(210, -8, 4, 0, Math.PI * 2);
+      ctx.arc(216, -10, 5, 0, Math.PI * 2);
       ctx.fill();
       ctx.strokeStyle = '#fff';
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 4;
       ctx.beginPath();
-      ctx.moveTo(178, -4);
-      ctx.quadraticCurveTo(188, 0, 198, -4);
+      ctx.moveTo(178, -6);
+      ctx.quadraticCurveTo(190, -1, 202, -6);
       ctx.stroke();
 
-      // Eyes / smile
+      // Face
       ctx.fillStyle = '#4e342e';
       ctx.beginPath();
-      ctx.arc(185, -1, 1.2, 0, Math.PI * 2);
-      ctx.arc(191, -1, 1.2, 0, Math.PI * 2);
+      ctx.arc(186, -3, 1.5, 0, Math.PI * 2);
+      ctx.arc(194, -3, 1.5, 0, Math.PI * 2);
       ctx.fill();
       ctx.strokeStyle = '#bf360c';
-      ctx.lineWidth = 1.2;
+      ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.moveTo(185, 3);
-      ctx.quadraticCurveTo(188, 5, 191, 3);
+      ctx.moveTo(186, 2);
+      ctx.quadraticCurveTo(190, 5, 194, 2);
       ctx.stroke();
 
       // Sparkle trail
-      ctx.fillStyle = '#ffe08a';
+      ctx.fillStyle = '#ffe082';
       const trail = [
-        [262, 20],
-        [272, 12],
-        [280, 24],
-        [268, 32],
+        [268, 18],
+        [282, 8],
+        [294, 22],
+        [278, 34],
+        [300, 14],
       ];
       for (const [tx, ty] of trail) {
-        ctx.globalAlpha = 0.55 + Math.sin(s.bob * 4 + tx) * 0.25;
+        ctx.globalAlpha = 0.65 + Math.sin(s.bob * 4 + tx) * 0.3;
         ctx.beginPath();
-        ctx.arc(tx, ty, 2.2, 0, Math.PI * 2);
+        ctx.arc(tx, ty, 3, 0, Math.PI * 2);
         ctx.fill();
       }
 
