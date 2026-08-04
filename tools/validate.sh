@@ -46,6 +46,7 @@ required_files=(
   tools/test-mechanics.js
   js/constants.js
   js/themes.js
+  js/snow-field.js
   js/theme-manager.js
   js/utils.js
   js/bubble.js

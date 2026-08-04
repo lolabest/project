@@ -14,6 +14,7 @@ const root = path.resolve(__dirname, '..');
 const files = [
   'js/constants.js',
   'js/themes.js',
+  'js/snow-field.js',
   'js/utils.js',
   'js/bubble.js',
   'js/board.js',

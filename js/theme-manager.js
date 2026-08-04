@@ -15,6 +15,16 @@
       this.listeners = new Set();
       this.currentId = 'original';
       this.current = BS.THEMES.original;
+      this.snow = null;
+
+      const bg = document.querySelector('.app-bg');
+      if (bg && typeof bg.appendChild === 'function' && BS.SnowField) {
+        try {
+          this.snow = new BS.SnowField(bg);
+        } catch {
+          this.snow = null;
+        }
+      }
     }
 
     onChange(listener) {
@@ -53,6 +63,11 @@
 
       if (options.persist !== false) {
         this.storage.setTheme(theme.id);
+      }
+
+      if (this.snow) {
+        if (theme.id === 'newyear') this.snow.start();
+        else this.snow.stop();
       }
 
       for (const listener of this.listeners) {
