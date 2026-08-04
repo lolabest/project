@@ -41,6 +41,7 @@ required_files=(
   .github/ISSUE_TEMPLATE/config.yml
   assets/icons/favicon.svg
   assets/icons/logo.svg
+  assets/icons/santa-sleigh.svg
   screenshots/title.png
   screenshots/gameplay.png
   tools/test-mechanics.js

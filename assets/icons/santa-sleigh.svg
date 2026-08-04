@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 120" role="img" aria-hidden="true">
+  <!-- Reindeer team (simplified silhouettes flying left-to-right) -->
+  <g fill="#5c3a1e">
+    <ellipse cx="38" cy="58" rx="16" ry="9"/>
+    <ellipse cx="28" cy="50" rx="7" ry="5"/>
+    <path d="M22 46 L16 34 L20 34 L24 44 Z" fill="#3d2614"/>
+    <path d="M26 46 L24 32 L28 32 L30 44 Z" fill="#3d2614"/>
+    <ellipse cx="72" cy="54" rx="15" ry="8"/>
+    <ellipse cx="63" cy="47" rx="6" ry="4.5"/>
+    <path d="M58 43 L53 32 L56 32 L60 42 Z" fill="#3d2614"/>
+    <path d="M61 43 L60 30 L63 30 L65 41 Z" fill="#3d2614"/>
+    <ellipse cx="104" cy="52" rx="14" ry="8"/>
+    <ellipse cx="96" cy="45" rx="6" ry="4.5"/>
+    <path d="M91 41 L87 30 L90 30 L93 40 Z" fill="#3d2614"/>
+    <path d="M94 41 L93 28 L96 28 L98 39 Z" fill="#3d2614"/>
+  </g>
+  <!-- Harness / traces -->
+  <path d="M50 58 C70 50, 100 48, 130 58" fill="none" stroke="#f0c14b" stroke-width="2" stroke-linecap="round"/>
+  <path d="M50 62 C75 56, 105 54, 132 62" fill="none" stroke="#c49a20" stroke-width="1.5" opacity="0.7"/>
+
+  <!-- Sleigh -->
+  <path d="M138 70 C150 58, 210 56, 236 68 L242 78 C220 86, 160 88, 140 80 Z" fill="#c62828"/>
+  <path d="M142 72 C155 62, 208 60, 232 70 L236 76 C215 82, 162 84, 144 78 Z" fill="#e53935"/>
+  <path d="M140 78 C160 90, 220 90, 240 78" fill="none" stroke="#f0c14b" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="150" cy="82" r="3" fill="#f0c14b"/>
+  <circle cx="230" cy="80" r="3" fill="#f0c14b"/>
+
+  <!-- Gift sack -->
+  <ellipse cx="210" cy="62" rx="16" ry="12" fill="#2e7d32"/>
+  <path d="M198 58 Q210 48 222 58" fill="none" stroke="#f0c14b" stroke-width="2"/>
+  <rect x="204" y="54" width="12" height="6" rx="1" fill="#f0c14b"/>
+
+  <!-- Santa body -->
+  <ellipse cx="178" cy="58" rx="14" ry="16" fill="#c62828"/>
+  <ellipse cx="178" cy="70" rx="12" ry="6" fill="#b71c1c"/>
+  <!-- Coat trim -->
+  <path d="M166 66 Q178 72 190 66" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+  <!-- Head -->
+  <circle cx="178" cy="42" r="10" fill="#ffcc80"/>
+  <!-- Beard -->
+  <ellipse cx="178" cy="50" rx="9" ry="8" fill="#fffef5"/>
+  <ellipse cx="178" cy="46" rx="5" ry="3" fill="#ffcc80"/>
+  <!-- Hat -->
+  <path d="M168 38 Q178 18 198 34 L188 40 Q178 30 170 40 Z" fill="#c62828"/>
+  <circle cx="198" cy="34" r="4" fill="#fff"/>
+  <path d="M168 38 Q178 42 188 38" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+  <!-- Eyes / smile hint -->
+  <circle cx="175" cy="41" r="1.2" fill="#4e342e"/>
+  <circle cx="181" cy="41" r="1.2" fill="#4e342e"/>
+  <path d="M175 45 Q178 47 181 45" fill="none" stroke="#bf360c" stroke-width="1.2" stroke-linecap="round"/>
+
+  <!-- Soft glow / sparkle trail -->
+  <g fill="#ffe08a" opacity="0.75">
+    <circle cx="248" cy="64" r="2"/>
+    <circle cx="258" cy="58" r="1.5"/>
+    <circle cx="266" cy="68" r="1.8"/>
+    <circle cx="254" cy="74" r="1.2"/>
+  </g>
+</svg>

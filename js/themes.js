@@ -141,7 +141,7 @@
     newyear: Object.freeze({
       id: 'newyear',
       name: 'New Year',
-      blurb: 'Midnight snow & champagne',
+      blurb: 'Santa, snow & champagne',
       themeColor: '#0b1c3d',
       tagline: 'Pop · Sparkle · Celebrate',
       css: Object.freeze({
