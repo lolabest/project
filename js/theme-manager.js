@@ -16,12 +16,10 @@
       this.currentId = 'original';
       this.current = BS.THEMES.original;
       this.snow = null;
-      this.santa = document.getElementById('santa-ride');
 
-      const bg = document.querySelector('.app-bg');
-      if (bg && typeof bg.appendChild === 'function' && BS.SnowField) {
+      if (BS.SnowField) {
         try {
-          this.snow = new BS.SnowField(bg);
+          this.snow = new BS.SnowField();
         } catch {
           this.snow = null;
         }
@@ -69,10 +67,6 @@
       if (this.snow) {
         if (theme.id === 'newyear') this.snow.start();
         else this.snow.stop();
-      }
-
-      if (this.santa) {
-        this.santa.classList.toggle('is-active', theme.id === 'newyear');
       }
 
       for (const listener of this.listeners) {
