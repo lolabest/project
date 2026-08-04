@@ -73,18 +73,17 @@ for f in "${required_files[@]}"; do
 done
 
 # Ensure index.html references every js module that exists and vice-versa.
-mapfile -t html_scripts < <(grep -oE 'src="js/[^"]+\.js"' index.html | sed 's/src="//;s/"$//' | sort)
 mapfile -t disk_scripts < <(find js -maxdepth 1 -type f -name '*.js' | sort)
 
 for s in "${disk_scripts[@]}"; do
-  if grep -q "src=\"$s\"" index.html; then
+  if grep -qE "src=\"${s}(\?[^\"]*)?\"" index.html; then
     ok "index loads $s"
   else
     fail "index.html does not load $s"
   fi
 done
 
-if grep -q 'src="script.js"' index.html; then
+if grep -qE 'src="script\.js(\?[^"]*)?"' index.html; then
   ok "index loads script.js"
 else
   fail "index.html does not load script.js"
