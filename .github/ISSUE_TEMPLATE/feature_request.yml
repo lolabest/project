@@ -1,0 +1,52 @@
+name: Feature request
+description: Propose a new feature or gameplay improvement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share the problem first — solutions second. For open-ended brainstorming, prefer GitHub Discussions.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What player or contributor pain does this address?
+      placeholder: "As a player, I want … because …"
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How should Bubble Shooter behave after this change?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you thought about
+  - type: dropdown
+    id: area
+    attributes:
+      label: Primary area
+      options:
+        - Gameplay
+        - Rendering / VFX
+        - Accessibility
+        - Performance
+        - Documentation
+        - Tooling / CI
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Project constraints
+      options:
+        - label: Remains playable by opening `index.html` (no bundler required)
+          required: true
+        - label: No new runtime npm dependencies
+          required: true

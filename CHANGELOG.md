@@ -1,0 +1,27 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.0.0] - 2026-08-04
+
+### Added
+
+* Complete Bubble Shooter gameplay on a hexagonal board
+* Six bubble colors with glossy canvas rendering
+* Accurate collision detection with wall bouncing and hex snapping
+* Match-3+ clearing and floating-cluster gravity
+* Score system with combo multipliers and persistent high score
+* Win and lose overlays with restart flow
+* Next-bubble preview and aim trajectory
+* Particle effects and combo celebration animations
+* Synthesized sound effects via the Web Audio API
+* Keyboard, mouse, and touch controls
+* Responsive glassmorphism UI with accessibility labels
+* Architecture documentation under `docs/`
+* GitHub Actions for lint validation and GitHub Pages deployment
+* Issue templates, pull request template, and contributing guidelines
+
+[1.0.0]: https://github.com/lolabest/project/releases/tag/v1.0.0

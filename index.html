@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="Bubble Shooter — a polished hexagonal match-3 puzzle game built with vanilla HTML5, CSS3, and JavaScript." />
+    <meta name="theme-color" content="#072031" />
+    <meta name="color-scheme" content="dark" />
+    <title>Bubble Shooter</title>
+    <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#game-canvas">Skip to game</a>
+
+    <div class="app-bg" aria-hidden="true">
+      <div class="bg-orb bg-orb-a"></div>
+      <div class="bg-orb bg-orb-b"></div>
+      <div class="bg-grid"></div>
+    </div>
+
+    <div class="app">
+      <header class="topbar glass">
+        <div class="brand">
+          <img class="brand-mark" src="assets/icons/logo.svg" width="36" height="36" alt="" />
+          <div class="brand-text">
+            <p class="brand-name">Bubble Shooter</p>
+            <p class="brand-tag">Hex match · clear the sky</p>
+          </div>
+        </div>
+
+        <div class="hud" role="group" aria-label="Score board">
+          <div class="hud-item">
+            <span class="hud-label" id="score-label">Score</span>
+            <span class="hud-value" id="score-value" aria-labelledby="score-label">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label" id="highscore-label">Best</span>
+            <span class="hud-value" id="highscore-value" aria-labelledby="highscore-label">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label" id="combo-label">Combo</span>
+            <span class="hud-value combo" id="combo-value" aria-labelledby="combo-label">—</span>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <p class="status" id="status-text" aria-live="polite">Ready</p>
+          <button type="button" class="btn ghost" id="btn-help" aria-label="Open help and controls">
+            Help
+          </button>
+          <button
+            type="button"
+            class="btn ghost"
+            id="btn-mute"
+            aria-pressed="false"
+            aria-label="Toggle sound"
+            title="Mute sound (M)"
+          >
+            Sound On
+          </button>
+        </div>
+      </header>
+
+      <main class="stage-wrap">
+        <section
+          id="game-stage"
+          class="stage glass"
+          aria-label="Bubble Shooter playfield"
+        >
+          <canvas
+            id="game-canvas"
+            role="img"
+            aria-label="Bubble Shooter game canvas. Use arrow keys to aim and Space to shoot."
+            tabindex="0"
+          ></canvas>
+
+          <div
+            id="game-overlay"
+            class="overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="overlay-title"
+            aria-describedby="overlay-message"
+            aria-hidden="false"
+          >
+            <div class="overlay-card glass">
+              <p class="overlay-kicker">Bubble Shooter</p>
+              <h1 id="overlay-title">Bubble Shooter</h1>
+              <p id="overlay-message">
+                Clear the hex grid. Match 3 or more. Don’t let bubbles cross the danger line.
+              </p>
+              <p id="overlay-score" class="overlay-score">Best 0</p>
+              <div class="overlay-actions">
+                <button type="button" class="btn primary" id="btn-play">Play</button>
+                <button type="button" class="btn primary" id="btn-restart" hidden>Play Again</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="hints glass" aria-label="Quick controls">
+          <p><kbd>←</kbd><kbd>→</kbd> Aim</p>
+          <p><kbd>Space</kbd> Shoot</p>
+          <p><kbd>R</kbd> Restart · <kbd>M</kbd> Mute</p>
+        </aside>
+      </main>
+
+      <footer class="footer">
+        <p>
+          Open source under MIT ·
+          <a href="https://github.com/lolabest/project">GitHub</a>
+          · v1.0.0
+        </p>
+      </footer>
+    </div>
+
+    <dialog id="help-dialog" class="help-dialog" aria-labelledby="help-title">
+      <form method="dialog" class="help-card glass">
+        <h2 id="help-title">How to Play</h2>
+        <ul>
+          <li>Aim with the mouse, touch, or arrow keys.</li>
+          <li>Shoot to snap a bubble onto the hexagonal board.</li>
+          <li>Match <strong>3 or more</strong> of the same color to pop them.</li>
+          <li>Disconnected clusters fall for bonus points.</li>
+          <li>Clear the board to win. Crossing the red line loses.</li>
+        </ul>
+        <p class="help-note">Works offline — just open <code>index.html</code>.</p>
+        <button type="submit" class="btn primary" id="btn-close-help">Got it</button>
+      </form>
+    </dialog>
+
+    <!-- Order matters: namespace modules, then entry -->
+    <script src="js/constants.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/bubble.js"></script>
+    <script src="js/board.js"></script>
+    <script src="js/collision-engine.js"></script>
+    <script src="js/shooter.js"></script>
+    <script src="js/storage-manager.js"></script>
+    <script src="js/score-manager.js"></script>
+    <script src="js/animation-manager.js"></script>
+    <script src="js/particle-system.js"></script>
+    <script src="js/renderer.js"></script>
+    <script src="js/sound-manager.js"></script>
+    <script src="js/input-manager.js"></script>
+    <script src="js/ui-manager.js"></script>
+    <script src="js/game.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

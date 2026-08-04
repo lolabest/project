@@ -1,0 +1,44 @@
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editors / IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dependencies (none expected — kept for accidental installs)
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Build / cache artifacts
+dist/
+build/
+.cache/
+.temp/
+.tmp/
+coverage/
+
+# Local tooling
+.eslintcache
+*.local
+
+# Screenshots generated during local development (keep committed demo shots)
+screenshots/.local/

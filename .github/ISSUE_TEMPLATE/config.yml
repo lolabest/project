@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/lolabest/project/discussions
+    about: Ask questions, propose ideas, and talk with the community.
+  - name: Security vulnerability
+    url: https://github.com/lolabest/project/blob/main/SECURITY.md
+    about: Report security issues privately using the Security Policy.
