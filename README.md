@@ -7,7 +7,7 @@ No frameworks. No npm. No bundlers. Open `index.html` and play.
 [![Validate](https://github.com/lolabest/project/actions/workflows/validate.yml/badge.svg)](https://github.com/lolabest/project/actions/workflows/validate.yml)
 [![Deploy](https://github.com/lolabest/project/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/lolabest/project/actions/workflows/deploy-pages.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-0b7a75.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.2.4-ff4fa3.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.2.5-ff4fa3.svg)](CHANGELOG.md)
 
 <p align="center">
   <img src="assets/icons/logo.svg" alt="Bubble Shooter logo" width="96" height="96" />

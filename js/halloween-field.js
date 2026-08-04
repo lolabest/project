@@ -1,5 +1,5 @@
 /**
- * Halloween festive overlay — spider nets + falling orange leaves.
+ * Halloween festive overlay — spider nets, flying pumpkins, falling orange leaves.
  * Fixed full-viewport canvas above the game (pointer-events: none).
  */
 (function (global) {
@@ -25,6 +25,7 @@
       this.ctx = this.canvas.getContext('2d', { alpha: true });
 
       this.leaves = [];
+      this.pumpkins = [];
       this.webs = [];
       this.active = false;
       this.rafId = 0;
@@ -49,7 +50,10 @@
       this.canvas.style.height = `${this.height}px`;
       this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
       this.layoutWebs();
-      if (this.active) this.ensureLeafCount();
+      if (this.active) {
+        this.ensureLeafCount();
+        this.ensurePumpkinCount();
+      }
     }
 
     layoutWebs() {
@@ -93,15 +97,47 @@
       };
     }
 
+    targetPumpkinCount() {
+      return Math.max(5, Math.min(10, Math.round(this.width / 180)));
+    }
+
+    ensurePumpkinCount() {
+      const target = this.targetPumpkinCount();
+      while (this.pumpkins.length < target) {
+        this.pumpkins.push(this.spawnPumpkin(true));
+      }
+      if (this.pumpkins.length > target) this.pumpkins.length = target;
+    }
+
+    spawnPumpkin(randomX) {
+      const size = 16 + Math.random() * 22;
+      const dir = Math.random() < 0.5 ? 1 : -1;
+      return {
+        x: randomX ? Math.random() * this.width : dir > 0 ? -40 : this.width + 40,
+        y: this.height * (0.08 + Math.random() * 0.42),
+        size,
+        dir,
+        speed: 35 + Math.random() * 55,
+        bob: Math.random() * Math.PI * 2,
+        bobSpeed: 1.4 + Math.random() * 1.6,
+        rot: (Math.random() - 0.5) * 0.4,
+        spin: (Math.random() - 0.5) * 0.6,
+        alpha: 0.82 + Math.random() * 0.18,
+        glow: Math.random() < 0.55,
+      };
+    }
+
     start() {
       if (this.active) {
         this.ensureLeafCount();
+        this.ensurePumpkinCount();
         return;
       }
       this.active = true;
       this.canvas.classList.add('is-active');
       this.layoutWebs();
       this.ensureLeafCount();
+      this.ensurePumpkinCount();
       this.lastTime = performance.now();
       this.rafId = requestAnimationFrame((t) => this.frame(t));
     }
@@ -129,6 +165,24 @@
       ctx.fillRect(0, 0, width, height);
 
       this.drawWebs(ctx, timestamp);
+
+      // Flying pumpkins replace sky stars on Halloween.
+      for (const pumpkin of this.pumpkins) {
+        pumpkin.bob += pumpkin.bobSpeed * dt;
+        pumpkin.rot += pumpkin.spin * dt;
+        pumpkin.x += pumpkin.dir * pumpkin.speed * dt;
+        pumpkin.y += Math.sin(pumpkin.bob) * 18 * dt;
+
+        if (pumpkin.dir > 0 && pumpkin.x - pumpkin.size > width + 30) {
+          Object.assign(pumpkin, this.spawnPumpkin(false), { dir: 1, x: -40 });
+        } else if (pumpkin.dir < 0 && pumpkin.x + pumpkin.size < -30) {
+          Object.assign(pumpkin, this.spawnPumpkin(false), { dir: -1, x: width + 40 });
+        }
+
+        // Keep pumpkins in the upper/mid sky band.
+        pumpkin.y = Math.min(height * 0.55, Math.max(height * 0.05, pumpkin.y));
+        this.drawPumpkin(ctx, pumpkin);
+      }
 
       for (const leaf of this.leaves) {
         leaf.wobble += leaf.wobbleSpeed * dt;
@@ -276,6 +330,78 @@
       ctx.moveTo(0, leaf.size * 0.2);
       ctx.lineTo(0, leaf.size * 0.95);
       ctx.stroke();
+
+      ctx.restore();
+    }
+
+    /**
+     * Jack-o'-lantern pumpkin that flies across the sky.
+     */
+    drawPumpkin(ctx, pumpkin) {
+      const { x, y, size: s, rot, alpha, glow, bob } = pumpkin;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rot);
+      ctx.globalAlpha = alpha;
+
+      if (glow) {
+        ctx.fillStyle = `rgba(255, 140, 0, ${0.2 + Math.sin(bob) * 0.08})`;
+        ctx.beginPath();
+        ctx.arc(0, 0, s * 1.35, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Body ribs
+      const body = ctx.createRadialGradient(-s * 0.25, -s * 0.3, s * 0.1, 0, 0, s);
+      body.addColorStop(0, '#ffb347');
+      body.addColorStop(0.45, '#ff7a18');
+      body.addColorStop(1, '#c43d00');
+      ctx.fillStyle = body;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, s * 1.05, s * 0.92, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(120, 40, 0, 0.35)';
+      ctx.lineWidth = Math.max(1, s * 0.06);
+      for (const ox of [-0.55, -0.25, 0.25, 0.55]) {
+        ctx.beginPath();
+        ctx.ellipse(s * ox * 0.35, 0, s * 0.28, s * 0.88, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Stem
+      ctx.fillStyle = '#2f6b1f';
+      ctx.beginPath();
+      ctx.rect(-s * 0.12, -s * 1.15, s * 0.24, s * 0.35);
+      ctx.fill();
+
+      // Jack face
+      ctx.fillStyle = glow ? '#ffe08a' : '#1a0a00';
+      // Eyes
+      ctx.beginPath();
+      ctx.moveTo(-s * 0.42, -s * 0.15);
+      ctx.lineTo(-s * 0.18, -s * 0.35);
+      ctx.lineTo(-s * 0.08, -s * 0.1);
+      ctx.closePath();
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(s * 0.42, -s * 0.15);
+      ctx.lineTo(s * 0.18, -s * 0.35);
+      ctx.lineTo(s * 0.08, -s * 0.1);
+      ctx.closePath();
+      ctx.fill();
+      // Mouth
+      ctx.beginPath();
+      ctx.moveTo(-s * 0.45, s * 0.2);
+      ctx.lineTo(-s * 0.2, s * 0.45);
+      ctx.lineTo(0, s * 0.28);
+      ctx.lineTo(s * 0.2, s * 0.45);
+      ctx.lineTo(s * 0.45, s * 0.2);
+      ctx.lineTo(s * 0.22, s * 0.32);
+      ctx.lineTo(0, s * 0.18);
+      ctx.lineTo(-s * 0.22, s * 0.32);
+      ctx.closePath();
+      ctx.fill();
 
       ctx.restore();
     }
