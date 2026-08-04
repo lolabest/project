@@ -1,0 +1,16 @@
+{
+  "name": "bubble-shooter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Production-quality hexagonal Bubble Shooter — vanilla HTML5, CSS3, and JavaScript.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "python3 -m http.server 8080",
+    "start": "python3 -m http.server 8080",
+    "validate": "bash tools/validate.sh",
+    "test": "node tools/test-mechanics.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
