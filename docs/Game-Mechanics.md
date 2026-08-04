@@ -6,10 +6,10 @@ of truth for gameplay behavior.
 ## Board
 
 * Layout: **odd-r horizontal hex grid**
-* Size: `8` columns × `12` rows (configurable in `constants.js`)
-* Opening layout: top `5` rows seeded with random colors
+* Size: `10` columns × `14` rows (configurable in `constants.js`)
+* Opening layout: top `6` rows seeded with random colors
 * Ceiling: row `0` anchors all “connected” clusters
-* Danger line: row `11` — any occupied cell at or below this row ends the game
+* Danger line: row `13` — any occupied cell at or below this row ends the game
 
 Odd rows are shifted right by one bubble radius so neighbors pack into a
 honeycomb.
@@ -92,5 +92,9 @@ points = round((pops * 10 + falls * 20) * (1 + (combo - 1) * 0.35))
 
 ## Responsiveness
 
-Bubble radius is derived from the stage width so the full hex grid fits on
-phones and desktops. Shooter position and danger line recalculate on resize.
+The playfield is viewport-first: a compact HUD leaves most of the screen for the
+canvas. Bubble radius is derived from **both** stage width and height so the full
+hex grid (`COLS` × `ROWS`) fits with a reserved shooter band at the bottom.
+Shooter position and danger line recalculate on resize. Mobile layouts drop the
+side chrome and scale the stage to the remaining viewport without horizontal
+scroll.

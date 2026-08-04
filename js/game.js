@@ -49,6 +49,7 @@
 
       this.onResize = this.handleResize.bind(this);
       this.tick = this.frame.bind(this);
+      this.resizeObserver = null;
 
       this.scoreManager.onChange((snap) => this.ui.updateScore(snap));
       this.ui.bindActions({
@@ -70,6 +71,10 @@
       });
 
       global.addEventListener('resize', this.onResize);
+      if (typeof ResizeObserver !== 'undefined') {
+        this.resizeObserver = new ResizeObserver(() => this.handleResize());
+        this.resizeObserver.observe(this.stage);
+      }
       this.handleResize();
       this.showTitle();
       this.startLoop();
@@ -79,12 +84,14 @@
       this.destroyed = true;
       cancelAnimationFrame(this.rafId);
       global.removeEventListener('resize', this.onResize);
+      this.resizeObserver?.disconnect();
       this.input.destroy();
     }
 
     showTitle() {
       this.state = State.TITLE;
       this.input.setEnabled(false);
+      this.stage.classList?.remove('is-playing');
       this.ui.showOverlay({
         title: 'Clear the Sky',
         message: 'Match 3 or more on the hex grid. Don’t let bubbles cross the danger line.',
@@ -100,6 +107,7 @@
       this.resetWorld();
       this.state = State.PLAYING;
       this.input.setEnabled(true);
+      this.stage.classList?.add('is-playing');
       this.ui.hideOverlay();
       this.ui.setStatus('Aim and shoot');
       this.scoreManager.reset();
@@ -158,22 +166,39 @@
     computeLayout() {
       const stageRect = this.stage.getBoundingClientRect();
       const width = Math.max(280, Math.floor(stageRect.width));
-      const height = Math.max(420, Math.floor(stageRect.height));
+      const height = Math.max(360, Math.floor(stageRect.height));
       this.renderer.resize(width, height);
 
-      const paddingX = Math.max(12, width * 0.04);
-      const paddingTop = 18;
-      const shooterReserve = 110;
+      const paddingX = Math.max(6, width * CONSTANTS.BOARD_PAD_X_RATIO);
+      const paddingTop = Math.max(6, height * CONSTANTS.BOARD_PAD_TOP_RATIO);
+      const shooterReserve = Math.max(
+        CONSTANTS.SHOOTER_ZONE_MIN,
+        Math.round(height * CONSTANTS.SHOOTER_ZONE_RATIO)
+      );
 
-      const playWidth = width - paddingX * 2;
-      // Odd rows shift by one radius, so usable span is (cols)*diameter + radius.
-      const radius = Math.floor(playWidth / (CONSTANTS.COLS * 2 + 1));
+      const usableWidth = Math.max(120, width - paddingX * 2);
+      const usableHeight = Math.max(160, height - paddingTop - shooterReserve);
+
+      // Odd rows shift by one radius → span is cols * diameter + radius.
+      const radiusByWidth = usableWidth / (CONSTANTS.COLS * 2 + 1);
+      // Vertical pack: (rows-1) * rowHeight + diameter.
+      const radiusByHeight =
+        usableHeight / ((CONSTANTS.ROWS - 1) * Utils.SQRT3 + 2);
+      const radius = Math.max(
+        CONSTANTS.MIN_BUBBLE_RADIUS,
+        Math.floor(Math.min(radiusByWidth, radiusByHeight))
+      );
+
       const boardWidth = CONSTANTS.COLS * radius * 2 + radius;
-      const originX = (width - boardWidth) / 2;
-      const originY = paddingTop;
       const rowHeight = radius * Utils.SQRT3;
-      const boardBottom = originY + (CONSTANTS.ROWS - 1) * rowHeight + radius * 2;
+      const boardPixelHeight = (CONSTANTS.ROWS - 1) * rowHeight + radius * 2;
+
+      // Center the hex grid in the usable play band (above the shooter).
+      const originX = (width - boardWidth) / 2;
+      const originY = paddingTop + Math.max(0, (usableHeight - boardPixelHeight) / 2);
       const dangerY = originY + CONSTANTS.DANGER_ROW * rowHeight + radius;
+      const shooterY = height - Math.max(44, Math.round(shooterReserve * 0.48));
+      const nextOffset = Math.max(34, radius * 1.55);
 
       return {
         width,
@@ -184,12 +209,12 @@
         playLeft: originX,
         playRight: originX + boardWidth,
         playTop: originY,
-        playBottom: height - 8,
+        playBottom: height - 6,
         shooterX: width / 2,
-        shooterY: Math.min(height - 52, Math.max(boardBottom + 36, height - shooterReserve + 24)),
+        shooterY,
         dangerY,
-        nextX: width - Math.max(36, radius * 1.6),
-        nextY: height - 52,
+        nextX: Math.min(width - nextOffset, originX + boardWidth - radius * 0.2),
+        nextY: shooterY,
       };
     }
 
@@ -449,6 +474,7 @@
     win() {
       this.state = State.WON;
       this.input.setEnabled(false);
+      this.stage.classList?.remove('is-playing');
       this.trajectory = [];
       this.sound.playWin();
       this.scoreManager.persistHighScore();
@@ -472,6 +498,7 @@
     lose() {
       this.state = State.LOST;
       this.input.setEnabled(false);
+      this.stage.classList?.remove('is-playing');
       this.trajectory = [];
       this.sound.playLose();
       this.scoreManager.persistHighScore();

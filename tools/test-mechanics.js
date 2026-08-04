@@ -132,6 +132,7 @@ function testKeyboard(BS, listeners) {
     focus() {},
   };
   const stage = {
+    classList: { toggle() {}, add() {}, remove() {} },
     getBoundingClientRect() {
       return { left: 0, top: 0, width: 800, height: 700 };
     },

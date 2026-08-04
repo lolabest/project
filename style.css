@@ -1,23 +1,26 @@
-/* Bubble Shooter — design system & layout */
+/* Bubble Shooter — viewport-first playfield layout */
 
 :root {
   --bg-deep: #061722;
-  --bg-mid: #0b2a3d;
-  --bg-glow: #124a5c;
   --sea: #1aa6a6;
   --sea-bright: #3ecfcf;
   --sand: #f0d7a3;
   --ink: #e8f4ff;
   --ink-dim: rgba(232, 244, 255, 0.68);
   --danger: #ff6b6b;
-  --glass: rgba(14, 42, 60, 0.55);
-  --glass-border: rgba(180, 230, 255, 0.22);
+  --glass: rgba(14, 42, 60, 0.52);
+  --glass-border: rgba(180, 230, 255, 0.2);
   --glass-highlight: rgba(255, 255, 255, 0.08);
-  --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
-  --radius: 22px;
+  --shadow: 0 12px 36px rgba(0, 0, 0, 0.32);
+  --radius: 18px;
   --font-display: "Trebuchet MS", "Segoe UI", "Avenir Next", sans-serif;
   --font-body: "Lucida Grande", "Segoe UI", "Helvetica Neue", sans-serif;
   --focus: 0 0 0 3px rgba(58, 207, 207, 0.55);
+  --chrome-gap: 0.45rem;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
   color-scheme: dark;
 }
 
@@ -30,7 +33,8 @@
 html,
 body {
   margin: 0;
-  min-height: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
@@ -39,7 +43,7 @@ body {
   background: var(--bg-deep);
   min-height: 100vh;
   min-height: 100dvh;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 body::before {
@@ -47,8 +51,8 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(1200px 700px at 15% -10%, rgba(26, 166, 166, 0.28), transparent 55%),
-    radial-gradient(900px 600px at 90% 10%, rgba(240, 215, 163, 0.12), transparent 50%),
+    radial-gradient(1000px 640px at 12% -8%, rgba(26, 166, 166, 0.26), transparent 55%),
+    radial-gradient(820px 520px at 92% 8%, rgba(240, 215, 163, 0.1), transparent 50%),
     linear-gradient(165deg, #082031 0%, #0a3348 45%, #06141f 100%);
   z-index: -2;
 }
@@ -58,7 +62,7 @@ body::before {
   left: 12px;
   top: -48px;
   z-index: 1000;
-  padding: 0.65rem 0.9rem;
+  padding: 0.55rem 0.85rem;
   border-radius: 999px;
   background: var(--sea);
   color: #042028;
@@ -67,7 +71,7 @@ body::before {
 }
 
 .skip-link:focus {
-  top: 12px;
+  top: calc(8px + var(--safe-top));
   outline: none;
   box-shadow: var(--focus);
 }
@@ -84,24 +88,24 @@ body::before {
   position: absolute;
   border-radius: 50%;
   filter: blur(8px);
-  opacity: 0.55;
+  opacity: 0.5;
   animation: drift 16s ease-in-out infinite alternate;
 }
 
 .bg-orb-a {
-  width: 42vw;
-  height: 42vw;
-  left: -8vw;
-  top: 18vh;
-  background: radial-gradient(circle, rgba(62, 207, 207, 0.35), transparent 70%);
+  width: min(42vw, 420px);
+  height: min(42vw, 420px);
+  left: -6vw;
+  top: 16vh;
+  background: radial-gradient(circle, rgba(62, 207, 207, 0.32), transparent 70%);
 }
 
 .bg-orb-b {
-  width: 36vw;
-  height: 36vw;
-  right: -6vw;
-  bottom: 8vh;
-  background: radial-gradient(circle, rgba(240, 215, 163, 0.22), transparent 70%);
+  width: min(34vw, 360px);
+  height: min(34vw, 360px);
+  right: -5vw;
+  bottom: 6vh;
+  background: radial-gradient(circle, rgba(240, 215, 163, 0.18), transparent 70%);
   animation-delay: -6s;
 }
 
@@ -112,98 +116,115 @@ body::before {
     linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   background-size: 48px 48px;
-  mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
-  opacity: 0.45;
+  mask-image: radial-gradient(circle at center, black 28%, transparent 78%);
+  opacity: 0.4;
 }
 
 @keyframes drift {
   from { transform: translate3d(0, 0, 0) scale(1); }
-  to { transform: translate3d(3vw, -2vh, 0) scale(1.08); }
+  to { transform: translate3d(2vw, -1.5vh, 0) scale(1.06); }
 }
 
+/* Full-viewport column: compact chrome + dominant stage */
 .app {
-  width: min(1100px, calc(100% - 1.5rem));
+  width: 100%;
+  max-width: none;
+  height: 100vh;
+  height: 100dvh;
   margin: 0 auto;
-  padding: 1rem 0 1.5rem;
-  display: grid;
-  gap: 1rem;
-  min-height: 100vh;
-  min-height: 100dvh;
-  grid-template-rows: auto 1fr auto;
+  padding:
+    calc(0.4rem + var(--safe-top))
+    calc(0.55rem + var(--safe-right))
+    calc(0.35rem + var(--safe-bottom))
+    calc(0.55rem + var(--safe-left));
+  display: flex;
+  flex-direction: column;
+  gap: var(--chrome-gap);
+  min-height: 0;
 }
 
 .glass {
   background: linear-gradient(160deg, var(--glass-highlight), transparent 40%), var(--glass);
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(16px) saturate(1.2);
-  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.15);
+  -webkit-backdrop-filter: blur(14px) saturate(1.15);
   box-shadow: var(--shadow);
 }
 
+/* Compact single-row HUD */
 .topbar {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr 1.1fr;
-  gap: 1rem;
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: nowrap;
   align-items: center;
-  padding: 0.9rem 1.1rem;
-  border-radius: var(--radius);
+  gap: 0.55rem 0.75rem;
+  padding: 0.4rem 0.65rem;
+  border-radius: 14px;
+  min-height: 0;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.45rem;
   min-width: 0;
+  flex: 0 1 auto;
 }
 
 .brand-mark {
+  width: 28px;
+  height: 28px;
   flex: 0 0 auto;
-  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.35));
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
 }
 
 .brand-name {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+  font-size: clamp(0.95rem, 1.6vw, 1.2rem);
   letter-spacing: -0.03em;
   line-height: 1.1;
+  white-space: nowrap;
 }
 
 .brand-tag {
-  margin: 0.15rem 0 0;
-  color: var(--ink-dim);
-  font-size: 0.92rem;
+  display: none;
 }
 
 .hud {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.55rem;
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: center;
+  gap: 0.35rem;
+  min-width: 0;
 }
 
 .hud-item {
   text-align: center;
-  padding: 0.45rem 0.35rem;
-  border-radius: 14px;
+  padding: 0.2rem 0.55rem;
+  border-radius: 10px;
   background: rgba(0, 0, 0, 0.18);
   border: 1px solid rgba(255, 255, 255, 0.06);
+  min-width: 3.6rem;
 }
 
 .hud-label {
   display: block;
-  font-size: 0.72rem;
+  font-size: 0.62rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
   color: var(--ink-dim);
+  line-height: 1.1;
 }
 
 .hud-value {
   display: block;
-  margin-top: 0.15rem;
+  margin-top: 0.05rem;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  line-height: 1.15;
 }
 
 .hud-value.combo.is-hot {
@@ -212,31 +233,29 @@ body::before {
 }
 
 @keyframes pulse-hot {
-  from { transform: scale(1.25); }
+  from { transform: scale(1.2); }
   to { transform: scale(1); }
 }
 
 .toolbar {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  flex: 0 0 auto;
   align-items: center;
-  gap: 0.55rem;
+  justify-content: flex-end;
+  gap: 0.35rem;
 }
 
 .status {
-  margin: 0;
-  color: var(--ink-dim);
-  font-size: 0.92rem;
-  margin-right: auto;
+  display: none;
 }
 
 .btn {
   appearance: none;
   border: 1px solid transparent;
   border-radius: 999px;
-  padding: 0.55rem 1rem;
+  padding: 0.35rem 0.75rem;
   font: inherit;
+  font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
   transition: transform 160ms ease, background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
@@ -258,7 +277,9 @@ body::before {
 .btn.primary {
   background: linear-gradient(135deg, var(--sea-bright), var(--sea));
   color: #042028;
-  min-width: 8.5rem;
+  min-width: 8rem;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.95rem;
 }
 
 .btn.primary:hover {
@@ -276,18 +297,26 @@ body::before {
   border-color: rgba(255, 107, 107, 0.45);
 }
 
+/* Playfield owns nearly all remaining viewport */
 .stage-wrap {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 1rem;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
   min-height: 0;
+  min-width: 0;
+  position: relative;
 }
 
 .stage {
   position: relative;
-  border-radius: calc(var(--radius) + 4px);
+  flex: 1 1 auto;
+  width: min(100%, 980px);
+  max-width: 100%;
+  margin: 0 auto;
+  border-radius: calc(var(--radius) + 2px);
   overflow: hidden;
-  min-height: min(72vh, 760px);
+  min-width: 0;
+  min-height: 0;
   touch-action: none;
 }
 
@@ -318,9 +347,9 @@ body::before {
 }
 
 .overlay-card {
-  width: min(420px, 100%);
-  padding: 1.6rem 1.4rem 1.35rem;
-  border-radius: 24px;
+  width: min(400px, 100%);
+  padding: 1.35rem 1.2rem 1.2rem;
+  border-radius: 20px;
   text-align: center;
   animation: rise-in 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -329,16 +358,16 @@ body::before {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  font-size: clamp(1.55rem, 4.5vw, 2.15rem);
   letter-spacing: -0.04em;
   color: var(--sea-bright);
   text-shadow: 0 8px 30px rgba(26, 166, 166, 0.35);
 }
 
 .overlay-card h1 {
-  margin: 0.35rem 0 0.55rem;
+  margin: 0.3rem 0 0.45rem;
   font-family: var(--font-display);
-  font-size: clamp(1.35rem, 3.5vw, 1.75rem);
+  font-size: clamp(1.15rem, 3vw, 1.5rem);
   font-weight: 700;
 }
 
@@ -349,18 +378,18 @@ body::before {
 }
 
 .overlay-score {
-  margin-top: 0.85rem !important;
+  margin-top: 0.75rem !important;
   color: var(--sand) !important;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: 1.05rem;
 }
 
 .overlay-actions {
-  margin-top: 1.2rem;
+  margin-top: 1rem;
   display: flex;
   justify-content: center;
-  gap: 0.65rem;
+  gap: 0.55rem;
 }
 
 @keyframes fade-in {
@@ -369,43 +398,70 @@ body::before {
 }
 
 @keyframes rise-in {
-  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  from { opacity: 0; transform: translateY(14px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* Compact control strip overlaid on the stage edge — does not steal layout width */
 .hints {
-  width: 160px;
-  padding: 1rem 0.9rem;
-  border-radius: var(--radius);
-  align-self: start;
-  display: grid;
-  gap: 0.65rem;
+  position: absolute;
+  left: 50%;
+  bottom: 0.45rem;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 0.7rem;
+  width: auto;
+  max-width: calc(100% - 1rem);
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  pointer-events: none;
+  opacity: 0.82;
+  font-size: 0.72rem;
 }
 
 .hints p {
   margin: 0;
   color: var(--ink-dim);
-  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.stage:has(#game-overlay:not([hidden])) .hints {
+  opacity: 0.9;
+}
+
+.stage.is-playing .hints {
+  opacity: 0;
+  pointer-events: none;
 }
 
 kbd {
   display: inline-block;
-  min-width: 1.5rem;
-  padding: 0.12rem 0.4rem;
-  margin-right: 0.2rem;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  min-width: 1.25rem;
+  padding: 0.08rem 0.32rem;
+  margin-right: 0.15rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   background: rgba(0, 0, 0, 0.28);
   font-family: var(--font-body);
-  font-size: 0.78rem;
+  font-size: 0.68rem;
   color: var(--ink);
   text-align: center;
 }
 
 .footer {
+  flex: 0 0 auto;
   text-align: center;
   color: var(--ink-dim);
-  font-size: 0.88rem;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  padding: 0.05rem 0;
+}
+
+.footer p {
+  margin: 0;
 }
 
 .footer a {
@@ -427,25 +483,25 @@ kbd {
 .help-card {
   width: min(440px, 100%);
   margin: auto;
-  padding: 1.4rem;
-  border-radius: 22px;
+  padding: 1.25rem;
+  border-radius: 18px;
   color: var(--ink);
 }
 
 .help-card h2 {
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.65rem;
   font-family: var(--font-display);
 }
 
 .help-card ul {
   margin: 0;
-  padding-left: 1.15rem;
+  padding-left: 1.1rem;
   color: var(--ink-dim);
   line-height: 1.5;
 }
 
 .help-note {
-  margin: 1rem 0;
+  margin: 0.85rem 0;
   color: var(--ink-dim);
 }
 
@@ -455,52 +511,110 @@ kbd {
   color: var(--sand);
 }
 
-@media (max-width: 900px) {
-  .topbar {
-    grid-template-columns: 1fr;
-    gap: 0.8rem;
-  }
-
-  .toolbar {
-    justify-content: flex-start;
-  }
-
-  .stage-wrap {
-    grid-template-columns: 1fr;
-  }
-
-  .hints {
-    width: auto;
-    grid-template-columns: repeat(3, 1fr);
-    text-align: center;
+/* Desktop: board is the hero — wide but height-dominant */
+@media (min-width: 901px) {
+  .app {
+    padding-inline: max(0.75rem, 2vw);
   }
 
   .stage {
-    min-height: min(68vh, 680px);
+    width: min(100%, 980px);
+  }
+
+  .brand-tag {
+    display: block;
+    margin: 0.1rem 0 0;
+    color: var(--ink-dim);
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+
+  .status {
+    display: block;
+    margin: 0 0.35rem 0 0;
+    color: var(--ink-dim);
+    font-size: 0.78rem;
+    max-width: 9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 900px) {
+  .topbar {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.35rem;
+  }
+
+  .brand {
+    order: 1;
+  }
+
+  .toolbar {
+    order: 2;
+  }
+
+  .hud {
+    order: 3;
+    flex: 1 1 100%;
+    justify-content: stretch;
+  }
+
+  .hud-item {
+    flex: 1 1 0;
+  }
+
+  .hints {
+    display: none;
+  }
+
+  .footer {
+    display: none;
+  }
+
+  .stage {
+    width: 100%;
   }
 }
 
 @media (max-width: 560px) {
   .app {
-    width: min(100% - 0.8rem, 1100px);
-    padding-top: 0.65rem;
+    padding:
+      calc(0.28rem + var(--safe-top))
+      calc(0.28rem + var(--safe-right))
+      calc(0.28rem + var(--safe-bottom))
+      calc(0.28rem + var(--safe-left));
+    gap: 0.3rem;
   }
 
-  .hud-value {
-    font-size: 1rem;
+  .topbar {
+    padding: 0.3rem 0.45rem;
+    border-radius: 12px;
   }
 
-  .hints {
-    grid-template-columns: 1fr;
-    gap: 0.35rem;
+  .brand-mark {
+    width: 24px;
+    height: 24px;
   }
 
-  .brand-tag {
-    display: none;
+  .brand-name {
+    font-size: 0.92rem;
+  }
+
+  .btn.ghost {
+    padding: 0.3rem 0.55rem;
+    font-size: 0.75rem;
+  }
+
+  .hud-item {
+    min-width: 0;
+    padding: 0.15rem 0.3rem;
   }
 
   .stage {
-    min-height: 62vh;
+    border-radius: 14px;
   }
 }
 

@@ -17,23 +17,30 @@
   ]);
 
   BS.CONSTANTS = Object.freeze({
-    VERSION: '1.0.0',
+    VERSION: '1.0.1',
     STORAGE_KEY: 'bubble-shooter-v1',
-    COLS: 8,
-    ROWS: 12,
-    INITIAL_ROWS: 5,
+    /** Wider / taller board for a mobile-arcade playfield feel. */
+    COLS: 10,
+    ROWS: 14,
+    INITIAL_ROWS: 6,
     MATCH_MIN: 3,
-    SHOOT_SPEED: 920,
+    SHOOT_SPEED: 980,
     MAX_DELTA_MS: 32,
-    DANGER_ROW: 11,
+    DANGER_ROW: 13,
     SCORE_POP: 10,
     SCORE_FALL: 20,
     COMBO_MULTIPLIER: 0.35,
     PARTICLE_BURST: 14,
-    TRAJECTORY_SEGMENTS: 48,
+    TRAJECTORY_SEGMENTS: 56,
     AIM_MAX_BOUNCES: 2,
     KEYBOARD_AIM_STEP: 0.09,
     MIN_AIM_ANGLE: Math.PI * 0.12,
     MAX_AIM_ANGLE: Math.PI * (1 - 0.12),
+    /** Layout: keep shooter clear of the hex stack. */
+    SHOOTER_ZONE_MIN: 96,
+    SHOOTER_ZONE_RATIO: 0.125,
+    BOARD_PAD_X_RATIO: 0.018,
+    BOARD_PAD_TOP_RATIO: 0.012,
+    MIN_BUBBLE_RADIUS: 10,
   });
 })(typeof window !== 'undefined' ? window : globalThis);

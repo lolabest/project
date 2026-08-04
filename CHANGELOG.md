@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-08-04
+
+### Changed
+
+* Viewport-first layout: playfield targets ~75–85% of screen height
+* Board expanded to 10×14 with fluid bubble scaling from available space
+* Compact HUD and overlay controls to maximize the playable area
+* Layout math fits the hex grid using both width and height constraints
+
 ## [1.0.0] - 2026-08-04
 
 ### Added
@@ -24,4 +33,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * GitHub Actions for lint validation and GitHub Pages deployment
 * Issue templates, pull request template, and contributing guidelines
 
+[1.0.1]: https://github.com/lolabest/project/releases/tag/v1.0.1
 [1.0.0]: https://github.com/lolabest/project/releases/tag/v1.0.0
