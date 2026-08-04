@@ -7,6 +7,11 @@ through a layered approach that fits a zero-build vanilla project.
 
 ### 1. Static Validation (CI)
 
+```bash
+bash tools/validate.sh
+node tools/test-mechanics.js
+```
+
 `tools/validate.sh` checks:
 
 * Required files exist
@@ -14,6 +19,9 @@ through a layered approach that fits a zero-build vanilla project.
 * No `TODO` / `FIXME` markers in shipped source
 * Script tags in `index.html` match files on disk
 * Basic HTML landmarks and accessibility attributes are present
+
+`tools/test-mechanics.js` exercises match groups, floating clusters, and keyboard
+aim/shoot through a headless `BS` namespace load (no browser required).
 
 ### 2. Manual Gameplay Checklist
 

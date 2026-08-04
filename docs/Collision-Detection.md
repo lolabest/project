@@ -12,7 +12,7 @@ overlap tests.
 
 ```
 x = originX + col * (2r) + (row % 2 ? r : 0) + r
-y = originY + row * (r * √3) + r
+y = originY + row * (r * Math.sqrt(3)) + r
 ```
 
 ## Wall Bouncing

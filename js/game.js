@@ -86,8 +86,8 @@
       this.state = State.TITLE;
       this.input.setEnabled(false);
       this.ui.showOverlay({
-        title: 'Bubble Shooter',
-        message: 'Clear the hex grid. Match 3 or more. Don’t let bubbles cross the danger line.',
+        title: 'Clear the Sky',
+        message: 'Match 3 or more on the hex grid. Don’t let bubbles cross the danger line.',
         scoreText: `Best ${Utils.formatScore(this.storage.getHighScore())}`,
         showPlay: true,
       });
@@ -103,6 +103,7 @@
       this.ui.hideOverlay();
       this.ui.setStatus('Aim and shoot');
       this.scoreManager.reset();
+      this.canvas.focus({ preventScroll: true });
     }
 
     restart() {
@@ -170,7 +171,7 @@
       const boardWidth = CONSTANTS.COLS * radius * 2 + radius;
       const originX = (width - boardWidth) / 2;
       const originY = paddingTop;
-      const rowHeight = radius * Math.SQRT3;
+      const rowHeight = radius * Utils.SQRT3;
       const boardBottom = originY + (CONSTANTS.ROWS - 1) * rowHeight + radius * 2;
       const dangerY = originY + CONSTANTS.DANGER_ROW * rowHeight + radius;
 

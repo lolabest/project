@@ -25,6 +25,9 @@ jobs:
       - name: Run repository validator
         run: bash tools/validate.sh
 
+      - name: Run mechanics tests
+        run: node tools/test-mechanics.js
+
       - name: HTML structure check
         run: |
           node <<'NODE'

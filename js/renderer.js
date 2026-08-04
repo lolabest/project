@@ -44,13 +44,17 @@
     drawDangerLine(y, width) {
       const { ctx } = this;
       ctx.save();
-      ctx.strokeStyle = 'rgba(255, 107, 107, 0.45)';
-      ctx.lineWidth = 2;
-      ctx.setLineDash([8, 8]);
+      ctx.strokeStyle = 'rgba(255, 107, 107, 0.85)';
+      ctx.lineWidth = 2.5;
+      ctx.setLineDash([10, 7]);
       ctx.beginPath();
       ctx.moveTo(12, y);
       ctx.lineTo(width - 12, y);
       ctx.stroke();
+      ctx.fillStyle = 'rgba(255, 107, 107, 0.72)';
+      ctx.font = '700 11px "Trebuchet MS", "Segoe UI", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('DANGER', 16, y - 6);
       ctx.restore();
     }
 
@@ -110,7 +114,7 @@
       const { ctx } = this;
       const { x, y, scale, alpha } = bubble;
       const r = bubble.radius * scale;
-      if (r <= 0.5) return;
+      if (!(r > 0.5) || !Number.isFinite(x) || !Number.isFinite(y)) return;
 
       const color = bubble.color;
       ctx.save();

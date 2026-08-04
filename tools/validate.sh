@@ -41,6 +41,9 @@ required_files=(
   .github/ISSUE_TEMPLATE/config.yml
   assets/icons/favicon.svg
   assets/icons/logo.svg
+  screenshots/title.png
+  screenshots/gameplay.png
+  tools/test-mechanics.js
   js/constants.js
   js/utils.js
   js/bubble.js

@@ -7,6 +7,9 @@
   const BS = global.BS || (global.BS = {});
 
   const Utils = {
+    /** √3 — hex vertical spacing factor (JS has Math.SQRT2 but not SQRT3). */
+    SQRT3: Math.sqrt(3),
+
     clamp(value, min, max) {
       return Math.min(max, Math.max(min, value));
     },

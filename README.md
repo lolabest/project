@@ -34,14 +34,12 @@ No frameworks. No npm. No bundlers. Open `index.html` and play.
 ## Screenshots
 
 <p align="center">
-  <img src="screenshots/title.png" alt="Title screen" width="720" />
+  <img src="screenshots/title.png" alt="Title screen showing Bubble Shooter brand and Play button" width="720" />
 </p>
 
 <p align="center">
-  <img src="screenshots/gameplay.png" alt="Gameplay" width="720" />
+  <img src="screenshots/gameplay.png" alt="Gameplay with hexagonal board, aim trajectory, and score HUD" width="720" />
 </p>
-
-> Screenshots are captured from the live game. If you are browsing a fresh clone before assets are regenerated, run the game locally and replace files under `screenshots/`.
 
 ## How to Run
 

@@ -91,25 +91,41 @@
 
     onKeyDown(event) {
       if (!this.enabled) return;
-      if (event.repeat && (event.key === ' ' || event.key === 'Enter')) return;
 
-      this.keys.add(event.key);
+      const key = event.key;
+      const code = event.code;
 
-      if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'a', 'A', 'd', 'D', ' ', 'Enter'].includes(event.key)) {
+      const isLeft = key === 'ArrowLeft' || key === 'a' || key === 'A' || code === 'ArrowLeft' || code === 'KeyA';
+      const isRight = key === 'ArrowRight' || key === 'd' || key === 'D' || code === 'ArrowRight' || code === 'KeyD';
+      const isShoot =
+        key === ' ' ||
+        key === 'Enter' ||
+        key === 'ArrowUp' ||
+        code === 'Space' ||
+        code === 'Enter' ||
+        code === 'ArrowUp';
+      const isRestart = key === 'r' || key === 'R' || code === 'KeyR';
+      const isMute = key === 'm' || key === 'M' || code === 'KeyM';
+
+      if (event.repeat && isShoot) return;
+
+      this.keys.add(code || key);
+
+      if (isLeft || isRight || isShoot) {
         event.preventDefault();
       }
 
       if (this.handlers.onUnlock) this.handlers.onUnlock();
 
-      if (event.key === 'ArrowLeft' || event.key === 'a' || event.key === 'A') {
+      if (isLeft) {
         if (this.handlers.onNudge) this.handlers.onNudge(-1);
-      } else if (event.key === 'ArrowRight' || event.key === 'd' || event.key === 'D') {
+      } else if (isRight) {
         if (this.handlers.onNudge) this.handlers.onNudge(1);
-      } else if (event.key === ' ' || event.key === 'Enter' || event.key === 'ArrowUp') {
+      } else if (isShoot) {
         if (this.handlers.onShoot) this.handlers.onShoot();
-      } else if (event.key === 'r' || event.key === 'R') {
+      } else if (isRestart) {
         if (this.handlers.onRestart) this.handlers.onRestart();
-      } else if (event.key === 'm' || event.key === 'M') {
+      } else if (isMute) {
         if (this.handlers.onMute) this.handlers.onMute();
       }
     }

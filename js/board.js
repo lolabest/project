@@ -38,7 +38,7 @@
     }
 
     get rowHeight() {
-      return this.radius * Math.SQRT3;
+      return this.radius * BS.Utils.SQRT3;
     }
 
     resize(radius, originX, originY) {
