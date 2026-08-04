@@ -9,8 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Santa Claus sleigh riding across the New Year background (behind the board)
+* Santa Claus sleigh flyby on the New Year snow overlay (same canvas/layer as snowfall)
 * Flowing snowfall backdrop on the New Year skin
+
+### Fixed
+
+* Santa was previously behind the opaque board; festive layer is now a visible full-viewport overlay
 
 ## [1.2.1] - 2026-08-04
 
