@@ -1,0 +1,128 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Lint & validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Make validator executable
+        run: chmod +x tools/validate.sh
+
+      - name: Run repository validator
+        run: bash tools/validate.sh
+
+      - name: Run mechanics tests
+        run: node tools/test-mechanics.js
+
+      - name: HTML structure check
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const html = fs.readFileSync('index.html', 'utf8');
+          const required = [
+            'game-canvas',
+            'game-overlay',
+            'score-value',
+            'highscore-value',
+            'btn-play',
+            'btn-restart',
+            'btn-mute',
+            'help-dialog',
+          ];
+          for (const id of required) {
+            if (!html.includes(`id="${id}"`)) {
+              console.error(`Missing element id=${id}`);
+              process.exit(1);
+            }
+          }
+          if (!html.includes('charset="UTF-8"')) {
+            console.error('Missing charset meta');
+            process.exit(1);
+          }
+          console.log('HTML structure check passed');
+          NODE
+
+      - name: JavaScript namespace smoke test
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const vm = require('vm');
+          const files = [
+            'js/constants.js',
+            'js/themes.js',
+            'js/snow-field.js',
+            'js/halloween-field.js',
+            'js/utils.js',
+            'js/bubble.js',
+            'js/board.js',
+            'js/collision-engine.js',
+            'js/shooter.js',
+            'js/storage-manager.js',
+            'js/theme-manager.js',
+            'js/score-manager.js',
+            'js/animation-manager.js',
+            'js/particle-system.js',
+            'js/renderer.js',
+            'js/sound-manager.js',
+            'js/input-manager.js',
+            'js/ui-manager.js',
+            'js/game.js',
+          ];
+          const sandbox = {
+            window: {},
+            globalThis: {},
+            performance: { now: () => 0 },
+            console,
+          };
+          sandbox.window = sandbox;
+          sandbox.globalThis = sandbox;
+          sandbox.requestAnimationFrame = (cb) => 0;
+          sandbox.cancelAnimationFrame = () => {};
+          sandbox.localStorage = {
+            _data: {},
+            setItem(k, v) { this._data[k] = String(v); },
+            getItem(k) { return this._data[k] ?? null; },
+            removeItem(k) { delete this._data[k]; },
+          };
+          const ctx = vm.createContext(sandbox);
+          for (const file of files) {
+            vm.runInContext(fs.readFileSync(file, 'utf8'), ctx, { filename: file });
+          }
+          const BS = sandbox.BS;
+          if (!BS || !BS.Board || !BS.CollisionEngine || !BS.Game || !BS.THEMES || !BS.ThemeManager) {
+            console.error('BS namespace incomplete', Object.keys(BS || {}));
+            process.exit(1);
+          }
+          if (Object.keys(BS.THEMES).length < 4) {
+            console.error('Expected 4 themes');
+            process.exit(1);
+          }
+          const board = new BS.Board({
+            cols: 8, rows: 12, radius: 16, originX: 0, originY: 0,
+          });
+          board.populate(3, [0, 1, 2, 3, 4, 5]);
+          if (board.countBubbles() < 8) {
+            console.error('Board populate produced too few bubbles');
+            process.exit(1);
+          }
+          const group = board.findMatchGroup(0, 0);
+          if (!Array.isArray(group)) {
+            console.error('findMatchGroup failed');
+            process.exit(1);
+          }
+          console.log('Namespace smoke test passed');
+          NODE

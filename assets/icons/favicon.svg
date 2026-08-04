@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Bubble Shooter">
+  <defs>
+    <radialGradient id="g" cx="32%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="18%" stop-color="#ff9db4"/>
+      <stop offset="55%" stop-color="#ff3b6b"/>
+      <stop offset="100%" stop-color="#c0103e"/>
+    </radialGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#5a3a9e"/>
+  <circle cx="32" cy="34" r="18" fill="url(#g)"/>
+  <ellipse cx="24" cy="26" rx="7" ry="4.5" transform="rotate(-28 24 26)" fill="rgba(255,255,255,0.85)"/>
+  <circle cx="46" cy="18" r="7" fill="#ffd23f"/>
+  <circle cx="16" cy="46" r="6" fill="#3db7ff"/>
+  <circle cx="48" cy="48" r="5" fill="#b44dff"/>
+</svg>
