@@ -73,7 +73,7 @@
       global.addEventListener('resize', this.onResize);
       if (typeof ResizeObserver !== 'undefined') {
         this.resizeObserver = new ResizeObserver(() => this.handleResize());
-        this.resizeObserver.observe(this.stage);
+        this.resizeObserver.observe(this.canvas);
       }
       this.handleResize();
       this.showTitle();
@@ -164,7 +164,8 @@
     }
 
     computeLayout() {
-      const stageRect = this.stage.getBoundingClientRect();
+      // Size to the canvas (inner playfield), not the wooden frame chrome.
+      const stageRect = this.canvas.getBoundingClientRect();
       const width = Math.max(280, Math.floor(stageRect.width));
       const height = Math.max(360, Math.floor(stageRect.height));
       this.renderer.resize(width, height);

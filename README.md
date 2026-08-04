@@ -1,13 +1,13 @@
 # Bubble Shooter
 
-**A production-quality hexagonal Bubble Shooter built with pure HTML5, CSS3, and vanilla JavaScript.**
+**A candy-gloss hexagonal Bubble Shooter with Bubble Witch–inspired presentation — pure HTML5, CSS3, and vanilla JavaScript.**
 
 No frameworks. No npm. No bundlers. Open `index.html` and play.
 
 [![Validate](https://github.com/lolabest/project/actions/workflows/validate.yml/badge.svg)](https://github.com/lolabest/project/actions/workflows/validate.yml)
 [![Deploy](https://github.com/lolabest/project/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/lolabest/project/actions/workflows/deploy-pages.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-0b7a75.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.1-1aa6a6.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.1.0-ff4fa3.svg)](CHANGELOG.md)
 
 <p align="center">
   <img src="assets/icons/logo.svg" alt="Bubble Shooter logo" width="96" height="96" />

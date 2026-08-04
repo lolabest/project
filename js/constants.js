@@ -8,16 +8,16 @@
   const BS = global.BS || (global.BS = {});
 
   BS.COLORS = Object.freeze([
-    Object.freeze({ id: 'crimson', fill: '#e63946', glow: '#ff6b6b', deep: '#9b1b2a' }),
-    Object.freeze({ id: 'azure', fill: '#1d8cf8', glow: '#6bb6ff', deep: '#0b4f99' }),
-    Object.freeze({ id: 'emerald', fill: '#2ec4b6', glow: '#7ef0e4', deep: '#0f7a70' }),
-    Object.freeze({ id: 'amber', fill: '#ffb703', glow: '#ffe08a', deep: '#b07a00' }),
-    Object.freeze({ id: 'violet', fill: '#9b5de5', glow: '#c9a0ff', deep: '#5a2d91' }),
-    Object.freeze({ id: 'coral', fill: '#ff6b35', glow: '#ffab85', deep: '#b33d12' }),
+    Object.freeze({ id: 'ruby', fill: '#ff3b6b', glow: '#ff9db4', deep: '#c0103e' }),
+    Object.freeze({ id: 'sky', fill: '#3db7ff', glow: '#a6e1ff', deep: '#0d6fbf' }),
+    Object.freeze({ id: 'lime', fill: '#7adf3c', glow: '#d2ff9a', deep: '#3b9a12' }),
+    Object.freeze({ id: 'lemon', fill: '#ffd23f', glow: '#fff1a8', deep: '#d49a00' }),
+    Object.freeze({ id: 'grape', fill: '#b44dff', glow: '#e2b0ff', deep: '#6d1fb8' }),
+    Object.freeze({ id: 'orange', fill: '#ff8a2a', glow: '#ffd0a0', deep: '#c45500' }),
   ]);
 
   BS.CONSTANTS = Object.freeze({
-    VERSION: '1.0.1',
+    VERSION: '1.1.0',
     STORAGE_KEY: 'bubble-shooter-v1',
     /** Wider / taller board for a mobile-arcade playfield feel. */
     COLS: 10,

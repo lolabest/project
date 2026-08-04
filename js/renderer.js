@@ -1,5 +1,5 @@
 /**
- * Canvas renderer — board, shooter, trajectory, overlays helpers.
+ * Canvas renderer — candy-gloss bubbles, enchanted sky, saga-style aim trail.
  */
 (function (global) {
   'use strict';
@@ -16,6 +16,21 @@
       this.width = 0;
       this.height = 0;
       this.dpr = 1;
+      this.stars = this.seedStars(48);
+    }
+
+    seedStars(count) {
+      const stars = [];
+      for (let i = 0; i < count; i += 1) {
+        stars.push({
+          x: Math.random(),
+          y: Math.random() * 0.72,
+          r: 0.6 + Math.random() * 1.6,
+          a: 0.35 + Math.random() * 0.55,
+          tw: Math.random() * Math.PI * 2,
+        });
+      }
+      return stars;
     }
 
     resize(cssWidth, cssHeight) {
@@ -33,28 +48,54 @@
       const { ctx, width, height } = this;
       ctx.clearRect(0, 0, width, height);
 
-      const gradient = ctx.createLinearGradient(0, 0, 0, height);
-      gradient.addColorStop(0, 'rgba(8, 28, 48, 0.35)');
-      gradient.addColorStop(0.55, 'rgba(10, 40, 62, 0.18)');
-      gradient.addColorStop(1, 'rgba(6, 20, 36, 0.55)');
-      ctx.fillStyle = gradient;
+      const sky = ctx.createLinearGradient(0, 0, 0, height);
+      sky.addColorStop(0, 'rgba(92, 62, 175, 0.55)');
+      sky.addColorStop(0.45, 'rgba(168, 110, 210, 0.28)');
+      sky.addColorStop(1, 'rgba(255, 190, 230, 0.22)');
+      ctx.fillStyle = sky;
       ctx.fillRect(0, 0, width, height);
+
+      // Soft cloud bands near the bottom (witch-cottage horizon feel).
+      const cloud = ctx.createRadialGradient(
+        width * 0.5,
+        height * 1.05,
+        height * 0.05,
+        width * 0.5,
+        height,
+        height * 0.55
+      );
+      cloud.addColorStop(0, 'rgba(255, 255, 255, 0.35)');
+      cloud.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      ctx.fillStyle = cloud;
+      ctx.fillRect(0, height * 0.55, width, height * 0.45);
+
+      const t = performance.now() * 0.002;
+      for (const star of this.stars) {
+        const twinkle = 0.55 + Math.sin(t + star.tw) * 0.45;
+        ctx.globalAlpha = star.a * twinkle;
+        ctx.fillStyle = '#fffef8';
+        ctx.beginPath();
+        ctx.arc(star.x * width, star.y * height, star.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
     }
 
     drawDangerLine(y, width) {
       const { ctx } = this;
       ctx.save();
-      ctx.strokeStyle = 'rgba(255, 107, 107, 0.85)';
-      ctx.lineWidth = 2.5;
-      ctx.setLineDash([10, 7]);
+      ctx.strokeStyle = 'rgba(255, 59, 107, 0.9)';
+      ctx.lineWidth = 3;
+      ctx.setLineDash([8, 8]);
       ctx.beginPath();
-      ctx.moveTo(12, y);
-      ctx.lineTo(width - 12, y);
+      ctx.moveTo(14, y);
+      ctx.lineTo(width - 14, y);
       ctx.stroke();
-      ctx.fillStyle = 'rgba(255, 107, 107, 0.72)';
-      ctx.font = '700 11px "Trebuchet MS", "Segoe UI", sans-serif';
+      ctx.setLineDash([]);
+      ctx.fillStyle = 'rgba(255, 59, 107, 0.92)';
+      ctx.font = '800 12px "Trebuchet MS", "Segoe UI", sans-serif';
       ctx.textAlign = 'left';
-      ctx.fillText('DANGER', 16, y - 6);
+      ctx.fillText('DANGER', 16, y - 7);
       ctx.restore();
     }
 
@@ -62,51 +103,64 @@
       if (!points || points.length < 2) return;
       const { ctx } = this;
       ctx.save();
-      ctx.strokeStyle = 'rgba(232, 244, 255, 0.55)';
-      ctx.fillStyle = 'rgba(232, 244, 255, 0.7)';
-      ctx.lineWidth = 2;
-      ctx.setLineDash([4, 8]);
-      ctx.beginPath();
-      ctx.moveTo(points[0].x, points[0].y);
       for (let i = 1; i < points.length; i += 1) {
-        ctx.lineTo(points[i].x, points[i].y);
+        const p = points[i];
+        const pulse = 0.55 + (i % 3) * 0.15;
+        ctx.fillStyle = `rgba(255, 255, 255, ${pulse})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.end ? 6 : 3.2, 0, Math.PI * 2);
+        ctx.fill();
+        if (p.end) {
+          ctx.strokeStyle = 'rgba(255, 79, 163, 0.85)';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
       }
-      ctx.stroke();
-
-      const end = points[points.length - 1];
-      ctx.setLineDash([]);
-      ctx.beginPath();
-      ctx.arc(end.x, end.y, 5, 0, Math.PI * 2);
-      ctx.fill();
       ctx.restore();
     }
 
     drawAimGuide(shooter) {
       const { ctx } = this;
-      const len = 54;
+      const len = 58;
       const ex = shooter.x + Math.cos(shooter.angle) * len;
       const ey = shooter.y + Math.sin(shooter.angle) * len;
 
       ctx.save();
-      ctx.strokeStyle = 'rgba(186, 230, 253, 0.75)';
-      ctx.lineWidth = 3;
+      // Cauldron / wand pedestal ring
+      const ring = ctx.createRadialGradient(
+        shooter.x,
+        shooter.y + 6,
+        shooter.radius * 0.2,
+        shooter.x,
+        shooter.y,
+        shooter.radius + 16
+      );
+      ring.addColorStop(0, 'rgba(255, 224, 138, 0.0)');
+      ring.addColorStop(0.55, 'rgba(255, 79, 163, 0.12)');
+      ring.addColorStop(1, 'rgba(90, 40, 140, 0.2)');
+      ctx.fillStyle = ring;
+      ctx.beginPath();
+      ctx.arc(shooter.x, shooter.y, shooter.radius + 16, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(255, 224, 138, 0.95)';
+      ctx.lineWidth = 3.5;
       ctx.lineCap = 'round';
       ctx.beginPath();
       ctx.moveTo(shooter.x, shooter.y);
       ctx.lineTo(ex, ey);
       ctx.stroke();
 
-      // Base ring
-      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
+      ctx.lineWidth = 2.5;
       ctx.beginPath();
-      ctx.arc(shooter.x, shooter.y, shooter.radius + 8, 0, Math.PI * 2);
+      ctx.arc(shooter.x, shooter.y, shooter.radius + 9, 0, Math.PI * 2);
       ctx.stroke();
       ctx.restore();
     }
 
     /**
-     * Glossy bubble with specular highlight.
+     * Candy-gloss bubble with thick rim and juicy speculars.
      * @param {BS.Bubble} bubble
      */
     drawBubble(bubble) {
@@ -122,20 +176,21 @@
 
       // Soft contact shadow
       ctx.beginPath();
-      ctx.fillStyle = 'rgba(0,0,0,0.22)';
-      ctx.ellipse(x + r * 0.08, y + r * 0.18, r * 0.92, r * 0.82, 0, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(60, 20, 90, 0.22)';
+      ctx.ellipse(x + r * 0.06, y + r * 0.22, r * 0.9, r * 0.72, 0, 0, Math.PI * 2);
       ctx.fill();
 
       const body = ctx.createRadialGradient(
-        x - r * 0.35,
-        y - r * 0.4,
-        r * 0.1,
+        x - r * 0.32,
+        y - r * 0.38,
+        r * 0.08,
         x,
-        y,
+        y + r * 0.08,
         r
       );
-      body.addColorStop(0, color.glow);
-      body.addColorStop(0.45, color.fill);
+      body.addColorStop(0, '#ffffff');
+      body.addColorStop(0.14, color.glow);
+      body.addColorStop(0.55, color.fill);
       body.addColorStop(1, color.deep);
 
       ctx.beginPath();
@@ -143,20 +198,25 @@
       ctx.arc(x, y, r, 0, Math.PI * 2);
       ctx.fill();
 
-      // Rim
-      ctx.lineWidth = Math.max(1, r * 0.08);
-      ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+      // Candy rim
+      ctx.lineWidth = Math.max(2, r * 0.12);
+      ctx.strokeStyle = 'rgba(255,255,255,0.55)';
       ctx.stroke();
+      ctx.lineWidth = Math.max(1, r * 0.05);
+      ctx.strokeStyle = color.deep;
+      ctx.globalAlpha = alpha * 0.35;
+      ctx.stroke();
+      ctx.globalAlpha = alpha;
 
-      // Specular
+      // Primary specular
       ctx.beginPath();
-      ctx.fillStyle = 'rgba(255,255,255,0.55)';
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
       ctx.ellipse(
-        x - r * 0.28,
-        y - r * 0.32,
-        r * 0.28,
-        r * 0.18,
-        -0.5,
+        x - r * 0.3,
+        y - r * 0.34,
+        r * 0.32,
+        r * 0.2,
+        -0.55,
         0,
         Math.PI * 2
       );
@@ -164,8 +224,8 @@
 
       // Secondary glint
       ctx.beginPath();
-      ctx.fillStyle = 'rgba(255,255,255,0.2)';
-      ctx.arc(x + r * 0.25, y + r * 0.2, r * 0.12, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.35)';
+      ctx.arc(x + r * 0.28, y + r * 0.22, r * 0.1, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.restore();
@@ -189,6 +249,29 @@
       preview.y = y;
       preview.radius = shooter.radius * 0.72;
       preview.scale = 1;
+
+      // Mini plaque behind next bubble
+      ctx.save();
+      ctx.fillStyle = 'rgba(92, 48, 22, 0.45)';
+      ctx.strokeStyle = 'rgba(240, 193, 75, 0.8)';
+      ctx.lineWidth = 2;
+      const pr = preview.radius + 10;
+      const px = x - pr;
+      const py = y - pr;
+      const pw = pr * 2;
+      const ph = pr * 2 + 14;
+      const rr = 12;
+      ctx.beginPath();
+      ctx.moveTo(px + rr, py);
+      ctx.arcTo(px + pw, py, px + pw, py + ph, rr);
+      ctx.arcTo(px + pw, py + ph, px, py + ph, rr);
+      ctx.arcTo(px, py + ph, px, py, rr);
+      ctx.arcTo(px, py, px + pw, py, rr);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+
       this.drawBubble(preview);
       preview.x = saved.x;
       preview.y = saved.y;
@@ -196,10 +279,10 @@
       preview.scale = saved.scale;
 
       ctx.save();
-      ctx.fillStyle = 'rgba(226, 240, 255, 0.75)';
-      ctx.font = '600 12px "Segoe UI", system-ui, sans-serif';
+      ctx.fillStyle = 'rgba(255, 246, 232, 0.95)';
+      ctx.font = '800 11px "Trebuchet MS", "Segoe UI", sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(label, x, y + shooter.radius * 0.72 + 16);
+      ctx.fillText(label, x, y + shooter.radius * 0.72 + 14);
       ctx.restore();
     }
 
@@ -209,9 +292,9 @@
       const rise = progress * 36;
       ctx.save();
       ctx.globalAlpha = alpha;
-      ctx.fillStyle = '#fff6d5';
-      ctx.strokeStyle = 'rgba(0,0,0,0.35)';
-      ctx.lineWidth = 3;
+      ctx.fillStyle = '#fff36c';
+      ctx.strokeStyle = 'rgba(122, 31, 140, 0.55)';
+      ctx.lineWidth = 4;
       ctx.font = '800 28px "Trebuchet MS", "Segoe UI", sans-serif';
       ctx.textAlign = 'center';
       ctx.strokeText(text, x, y - rise);

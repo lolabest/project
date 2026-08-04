@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="description" content="Bubble Shooter — a polished hexagonal match-3 puzzle game built with vanilla HTML5, CSS3, and JavaScript." />
-    <meta name="theme-color" content="#072031" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="description" content="Bubble Shooter — a candy-gloss hexagonal bubble saga inspired by classic witch-bubble puzzlers." />
+    <meta name="theme-color" content="#5a3a9e" />
+    <meta name="color-scheme" content="light" />
     <title>Bubble Shooter</title>
     <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="style.css" />
@@ -14,18 +14,18 @@
     <a class="skip-link" href="#game-canvas">Skip to game</a>
 
     <div class="app-bg" aria-hidden="true">
+      <div class="stars"></div>
       <div class="bg-orb bg-orb-a"></div>
       <div class="bg-orb bg-orb-b"></div>
-      <div class="bg-grid"></div>
     </div>
 
     <div class="app">
-      <header class="topbar glass">
+      <header class="topbar plaque">
         <div class="brand">
           <img class="brand-mark" src="assets/icons/logo.svg" width="36" height="36" alt="" />
           <div class="brand-text">
             <p class="brand-name">Bubble Shooter</p>
-            <p class="brand-tag">Hex match · clear the sky</p>
+            <p class="brand-tag">Match · Pop · Spellbound</p>
           </div>
         </div>
 
@@ -65,9 +65,10 @@
       <main class="stage-wrap">
         <section
           id="game-stage"
-          class="stage glass"
+          class="stage"
           aria-label="Bubble Shooter playfield"
         >
+          <div class="stage-sky" aria-hidden="true"></div>
           <canvas
             id="game-canvas"
             role="img"
@@ -75,7 +76,7 @@
             tabindex="0"
           ></canvas>
 
-          <aside class="hints glass" aria-label="Quick controls">
+          <aside class="hints" aria-label="Quick controls">
             <p><kbd>←</kbd><kbd>→</kbd> Aim</p>
             <p><kbd>Space</kbd> Shoot</p>
             <p><kbd>R</kbd> Restart · <kbd>M</kbd> Mute</p>
@@ -90,11 +91,11 @@
             aria-describedby="overlay-message"
             aria-hidden="false"
           >
-            <div class="overlay-card glass">
+            <div class="overlay-card">
               <p class="overlay-kicker">Bubble Shooter</p>
               <h1 id="overlay-title">Clear the Sky</h1>
               <p id="overlay-message">
-                Match 3 or more on the hex grid. Don’t let bubbles cross the danger line.
+                Match 3 or more sparkling bubbles. Don’t let them cross the danger line!
               </p>
               <p id="overlay-score" class="overlay-score">Best 0</p>
               <div class="overlay-actions">
@@ -110,13 +111,13 @@
         <p>
           Open source under MIT ·
           <a href="https://github.com/lolabest/project">GitHub</a>
-          · v1.0.1
+          · v1.1.0
         </p>
       </footer>
     </div>
 
     <dialog id="help-dialog" class="help-dialog" aria-labelledby="help-title">
-      <form method="dialog" class="help-card glass">
+      <form method="dialog" class="help-card">
         <h2 id="help-title">How to Play</h2>
         <ul>
           <li>Aim with the mouse, touch, or arrow keys.</li>

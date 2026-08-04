@@ -1,6 +1,6 @@
 {
   "name": "bubble-shooter",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "private": true,
   "description": "Production-quality hexagonal Bubble Shooter — vanilla HTML5, CSS3, and JavaScript.",
   "license": "MIT",
