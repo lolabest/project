@@ -76,7 +76,7 @@
     halloween: Object.freeze({
       id: 'halloween',
       name: 'Halloween',
-      blurb: 'Black nets & orange leaves',
+      blurb: 'Pumpkins, nets & orange leaves',
       themeColor: '#050505',
       tagline: 'Trick · Treat · Pop',
       css: Object.freeze({
@@ -114,7 +114,7 @@
       canvas: Object.freeze({
         sky: ['rgba(0, 0, 0, 0.72)', 'rgba(12, 12, 12, 0.45)', 'rgba(40, 22, 8, 0.3)'],
         cloud: 'rgba(255, 120, 30, 0.1)',
-        star: '#ffb347',
+        star: 'transparent',
         danger: 'rgba(255, 70, 40, 0.95)',
         trail: 'rgba(255, 180, 80, 0.9)',
         trailEnd: 'rgba(255, 106, 0, 0.95)',

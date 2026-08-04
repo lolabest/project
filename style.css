@@ -185,9 +185,12 @@ body::before {
   animation: twinkle 3.5s ease-in-out infinite alternate;
 }
 
-/* Halloween uses flying pumpkins instead of CSS/canvas stars. */
+/* Halloween: no background starfield (pumpkins + soft leaves instead). */
 html[data-theme="halloween"] .stars {
-  display: none;
+  display: none !important;
+  opacity: 0 !important;
+  background-image: none !important;
+  animation: none !important;
 }
 
 @keyframes floaty {

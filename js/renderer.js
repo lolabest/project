@@ -74,20 +74,23 @@
       ctx.fillStyle = cloud;
       ctx.fillRect(0, height * 0.55, width, height * 0.45);
 
-      // Halloween uses flying pumpkins on the overlay instead of sky stars.
-      const themeId = this.themes?.currentId || this.themes?.current?.id;
-      if (themeId !== 'halloween') {
-        const t = performance.now() * 0.002;
-        for (const star of this.stars) {
-          const twinkle = 0.55 + Math.sin(t + star.tw) * 0.45;
-          ctx.globalAlpha = star.a * twinkle;
-          ctx.fillStyle = theme.star;
-          ctx.beginPath();
-          ctx.arc(star.x * width, star.y * height, star.r, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        ctx.globalAlpha = 1;
+      // No sky stars on Halloween (flying pumpkins live on the overlay instead).
+      const themeId =
+        this.themes?.currentId ||
+        this.themes?.current?.id ||
+        document.documentElement.getAttribute('data-theme');
+      if (themeId === 'halloween') return;
+
+      const t = performance.now() * 0.002;
+      for (const star of this.stars) {
+        const twinkle = 0.55 + Math.sin(t + star.tw) * 0.45;
+        ctx.globalAlpha = star.a * twinkle;
+        ctx.fillStyle = theme.star;
+        ctx.beginPath();
+        ctx.arc(star.x * width, star.y * height, star.r, 0, Math.PI * 2);
+        ctx.fill();
       }
+      ctx.globalAlpha = 1;
     }
 
     drawDangerLine(y, width) {

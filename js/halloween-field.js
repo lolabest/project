@@ -93,7 +93,8 @@
         wobbleSpeed: 1.2 + Math.random() * 1.8,
         color: LEAF_COLORS[(Math.random() * LEAF_COLORS.length) | 0],
         alpha: 0.55 + Math.random() * 0.4,
-        type: Math.random() < 0.5 ? 'maple' : 'oak',
+        // Soft oval / teardrop leaves only — pointed maple silhouettes read as stars.
+        type: Math.random() < 0.55 ? 'oak' : 'teardrop',
       };
     }
 
@@ -304,22 +305,13 @@
       ctx.lineWidth = 1;
 
       ctx.beginPath();
-      if (leaf.type === 'maple') {
-        const s = leaf.size;
-        ctx.moveTo(0, -s);
-        ctx.lineTo(s * 0.28, -s * 0.25);
-        ctx.lineTo(s * 0.85, -s * 0.35);
-        ctx.lineTo(s * 0.35, s * 0.05);
-        ctx.lineTo(s * 0.55, s * 0.7);
-        ctx.lineTo(0, s * 0.28);
-        ctx.lineTo(-s * 0.55, s * 0.7);
-        ctx.lineTo(-s * 0.35, s * 0.05);
-        ctx.lineTo(-s * 0.85, -s * 0.35);
-        ctx.lineTo(-s * 0.28, -s * 0.25);
-        ctx.closePath();
+      const s = leaf.size;
+      if (leaf.type === 'teardrop') {
+        ctx.moveTo(0, -s * 0.95);
+        ctx.bezierCurveTo(s * 0.55, -s * 0.35, s * 0.5, s * 0.55, 0, s * 0.9);
+        ctx.bezierCurveTo(-s * 0.5, s * 0.55, -s * 0.55, -s * 0.35, 0, -s * 0.95);
       } else {
-        const s = leaf.size;
-        ctx.ellipse(0, 0, s * 0.55, s * 0.85, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, 0, s * 0.48, s * 0.82, 0, 0, Math.PI * 2);
       }
       ctx.fill();
       ctx.stroke();
